@@ -1,5 +1,14 @@
 -- [SCOTT]
   -- 대상(테이블명, 뷰명)
+SELECT *
+FROM user_users;
+FROM dba_users;
+FROM all_users;
+
+-- 
+SELECT *
+FROM tabs;  -- user_tables의 약어
+FROM user_tables;
 
 -- dept, emp, bonus, salgrade
 SELECT *
@@ -224,7 +233,7 @@ ORDER BY -- 7
 ; -- 의미없는 ; 자동 구역 분할
 DESC emp; -- NUMBER(7,2) --> 7자리, 소수점 2자리 실수
 SELECT * -- emp 테이블의 모든 칼럼
-FROM emp;
+FROM emp; --FROM scott.emp;
 
 -- emp 테이블에서 사원번호, 사원명, 입사일자 조회
 SELECT empno,ename,hiredate -- select_list
@@ -292,14 +301,14 @@ FROM emp;
 -- [문제 ] emp 테이블에서 사원번호, 사원명, 직속상사 조회
 --      직속상사가 null 사원의 mgr을 'CEO'라고 출력.
 -- (해결) NULL 처리하는 코딩. NVL() 함수 
+--          mgr   NUMBER(4) -> 문자열 변환
+-- Java :  int i = 10;   ->  "10"    10+""
+-- Oracle : mgr || ''  ,   함수
+--        숫자 -> 문자열 변환 : TO_CHAR()
+--        날짜 -> 문자열 변환 : TO_CHAR()
 
-SELECT empno, ename, NVL(TO_CHAR(mgr),'CEO')
-FROM emp;
 -- invalid number
-DESC emp; -- MGR NUMBER(4)
---  mgr  NUMBER(4) -> 문자열 변환
--- JAVA : int i = 10;  -> 10 + "" -> "10"
--- oracle : mgr || ' ' , 함수 TO_CHAR : 숫자, 날짜 -> 문자열 변환
+
 SELECT empno, ename
             , mgr|| ''
             , NVL(mgr || '', 'CEO')
@@ -308,11 +317,9 @@ SELECT empno, ename
 FROM emp;
 -- 우측정렬: 숫자, 좌측정렬: 문자
 
--- 숫자 -> 문자열 변환 : TO_CHAR()
--- 날짜 -> 문자열 변환 : TO_CHAR()
 
 -- emp 테이블에서 이름은 'SMITH'이고, 잡은 CLERK입니다. 
--- JAVA : System.out.printf("%s, %s",name, job)
+-- JAVA : System.out.printf("이름은 \"%s\"이고, 잡은 %s입니다.", name, job);
 -- 홑따옴표 '' 두 개
 SELECT '이름은 ' || CHR(39) || ename || '''이고, 잡은 ' || job || '입니다.'
 FROM emp;
@@ -324,10 +331,17 @@ FROM emp;
 SELECT deptno, ename, hiredate
 FROM emp
 WHERE deptno = 10; -- 오라클의 같다 연산자 =    // 조건절: 참이면 처리
+-- 자바
+--for( int i=0; i<12; i++){
+--     if( emps[i].deptno == 10 ){
+--         syso(부서번호, 사원명, 입사일자)
+--     }
+--}
+
 -- [문제 ] emp 테이블에서 10번 부서가 아닌 사원의 부서번호, 사원명, 입사일자 조회.
 SELECT deptno, ename, hiredate
 FROM emp
--- JAVA : WHERE ==20 || ==30 || ==40
+-- JAVA : WHERE deptno == 20 || deptno == 30 || deptno == 40;
 -- Oracle 논리연산자
 WHERE NOT deptno IN (20,30,40); -- 논리연산자 not 얘는 다른코딩
 WHERE deptno NOT IN (20,30,40); -- sql 연산자 not
@@ -357,6 +371,7 @@ WHERE city != '서울' AND city != '경기' AND city != '인천';
 WHERE NOT(city = '서울' OR city = '경기' OR city = '인천');
 WHERE city NOT IN('서울','경기','인천');
 
+-- (기억)
 -- [문제] emp 테이블에서 사원명이 'ford'인 사원의 모든 사원정보를 출력
 -- Java : STring.toUpperCase();
 DESC emp; -- VARCHAR2(10) 
@@ -382,6 +397,11 @@ WHERE comm IS NULL;
 
 -- [문제] emp 테이블에서 월급(pay = sal + comm)이 2000 이상 4000 이하 사원정보
 --          (  부서번호, 사원명, 잡, 월급 )
+-- [1]
+SELECT deptno, ename ,  sal + NVL(comm, 0)  pay
+FROM emp 
+WHERE sal + NVL(comm, 0) >= 2000 AND sal + NVL(comm, 0) <= 4000;
+--[2]
 SELECT deptno, ename, job, sal + NVL(comm,0) pay
 FROM emp e 
 WHERE sal + NVL(comm,0) BETWEEN 2000 AND 4000;

@@ -11,7 +11,7 @@ FROM user_tables;
 
 -- [문제] 사원번호, 사원명, 입사일자만 조회
 SELECT employee_id,
--- JAVA: 문자열 연결 -> + 연산자, STring concat() 메서드
+-- JAVA: 문자열 연결 + 연산자, STring concat() 메서드
 -- Oracle: 문자열 연결 || 연산자 , CONCAT (두개 인자만 , 세개 -> CONCAT 중첩) 메서드
 --first_name,last_name
 -- -- '+' 앞 뒤 숫자만 와야함 연결 ->||
