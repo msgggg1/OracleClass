@@ -1,0 +1,219 @@
+1. 용어정리
+  1) 롤(Role)  : 권한을 묶어놓아 관리를 용이하게 하는 것
+        ㄱ. 서로 관련된 권한 묶은 그룹
+        ㄴ. 다수 사용자 + 다양한 권한 있을 경우 효과적으로 관리 (목적)
+  2) 롤 사용 순서
+    ㄱ.  롤 생성 CREATE ROLE 롤 이름
+    ㄴ.  롤 권한 부여 GRANT 권한 TO 롤
+    ㄷ.  롤을 사용자에게 부여 GRANT ~
+  3) 스키마(Schema)  :
+    ㄴ 사용자 SCOTT을 생성하면, 자동으로 동일한 이름의 스키마 SCOTT 생성된다.
+    ㄴ DB에서 어떤 목적을 위해 생성되는 DB객체의 집합
+    ㄴ 특정 사용자와 관련된 Object들의 모음(집합) ( 옆에 뜨는 모든 것)
+  
+2. SELECT문의 7가지 절을 적으시고, 처리 순서를 적으세요. 
+WITH ----1
+SELECT ----6
+FROM----2
+WHERE---3
+GROUP BY ---4
+HAVING ---5
+ORDER BY ---6
+
+3. employees 테이블에서  아래와 같이 출력되도록 쿼리 작성하세요. 
+   ㄱ. 문자열 연결연산자 사용
+		SELECT first_name, last_name, (first_name || ' ' || last_name) NAME
+		FROM employees;
+   ㄴ. 문자열 연결 함수 사용
+		SELECT first_name, last_name,concat(concat(first_name,' '),last_name) NAME
+        FROM employees;
+   
+    [실행 결과]
+    FIRST_NAME          LAST_NAME                   NAME                                           
+    -------------------- ------------------------- ---------------------------------------------- 
+    Samuel               McCain                    Samuel McCain                                  
+    Allan                McEwen                    Allan McEwen                                   
+    Irene                Mikkilineni               Irene Mikkilineni                              
+    Kevin                Mourgos                   Kevin Mourgos                                  
+    Julia                Nayer                     Julia Nayer   
+    :
+   
+    
+4. emp 테이블에서 잡,  사원번호, 이름, 입사일자를 조회하는 SQL를 작성하세요.  
+	SELECT job, empno, ename, hiredate
+	FROM emp;
+
+5. 어제까지 배운 [Oracle 함수]를 적고 설명하세요 .
+ UPPER()
+ LOWER()
+TO_CHAR()
+CONCAT()
+INITCAP(): 첫글자만 대문자로 변환
+COUNT()
+CHR()
+NVL(), NVL2()
+
+5-2. 어제까지 배운 [Oracle 자료형]을 적고 설명하세요. 
+VARCHAR2(바이트) - 문자, 문자열 자료형, ' ' 홑따옴표 붙인다. 영어 1바이트, 한글 3바이트
+NUMBER(p,s) NUMBER(2) -> 두자리 정수, NUMBER(7,2) -> (,)->실수, 소수점 2자리
+CHAR()
+DATE
+LONG 문자열이다.
+  
+6. 어제까지 배운 오라클의 연산자(operator)를 적으세요.   
+   1) 논리연산자    AND, OR NOT (true/false/null)            && || ! (true/false)
+   2) 비교연산자    > < <= >= , =, !=(=<>, ^=)
+   3) SQL연산자    [NOT]BETWEEN a AND b, [NOT] IN (), IS [NOT] NULL, ANY, SOME, ALL 등등
+   5) 산술연산자    + ( 양옆에 숫자만)
+   6) 연결연산자    ||
+
+7. insa 테이블에서 사원이 속해 있는 부서의 종류를 확인하는 쿼리를 작성하세요.
+	SELECT DISTINCT buseo
+	FROM insa;
+7-2. insa 테이블에서 사원이 속해 있는 부서의 갯수를 확인하는 쿼리를 작성하세요.
+	SELECT COUNT(DISTINCT BUSEO)
+	FROM insa;
+    
+8. emp 테이블에서
+   pay(sal+comm)  1000 이상~ 3000 이하 받는  
+   30부서원을 제외한 모든 사원들만 
+   ename을 기준으로 오름차순 정렬해서 조회하는 쿼리를 작성하세요.  
+    ㄱ. 일반 쿼리 사용.    
+SELECT emp.*,sal+NVL(comm,0)pay
+FROM emp
+WHERE sal+NVL(comm,0) BETWEEN 1000 AND 3000
+        AND deptno != 30
+ORDER BY ename;
+
+    ㄴ. inline view 사용  
+SELECT *
+FROM (
+        SELECT emp.*
+            ,sal+NVL(comm,0)pay 
+        FROM emp
+        WHERE deptno != 30
+    )temp
+WHERE pay BETWEEN 1000 AND 3000
+ORDER BY ename;
+
+    ㄷ. with 절 사용    
+WITH emp_pay AS (SELECT emp.*
+            ,sal+NVL(comm,0)pay 
+        FROM emp
+        WHERE deptno != 30
+        )
+SELECT *
+FROM emp_pay
+WHERE pay BETWEEN 1000 AND 3000
+ORDER BY ename;
+   
+9. emp 테이블에서 직속상사(mgr)가 없는  사원의 정보를 조회하는 쿼리 작성하세요.  
+SELECT *
+FROM emp
+WHERE mgr is NULL;
+
+10. emp 테이블에서 직속상사(mgr)가 없는  사원의 mgr을 'CEO'로 출력하는 쿼리 작성하세요.
+SELECT emp.*, NVL(TO_CHAR(mgr), 'CEO')
+FROM emp;
+ 
+11. insa 테이블에서 연락처(tel)가 없는 사원은 '연락처 등록 안됨' 출력하는 쿼리를 작성하세요. 
+SELECT NVL(to_char(tel), '연락처 등록 안됨')
+FROM insa;
+ 
+12. insa 테이블에서 개발부만 num, name, tel 컬럼 출력할 때 연락처(tel) 없는 사람은 X, O 출력하는 쿼리 작성.    
+SELECT num, name, NVL2(tel,'O','X') -- PL/SQL 에만 있음
+FROM insa
+WHERE buseo = '개발부';
+
+13. emp 테이블에서  아래와 같은 조회 결과가 나오도록 쿼리를 작성하세요.
+SELECT empno, ename, sal, NVL(comm,0)comm, sal+NVL(comm,0)pay
+FROM emp;
+
+
+    [실행 결과]
+     EMPNO ENAME             SAL       COMM        PAY
+---------- ---------- ---------- ---------- ----------
+      7369 SMITH             800          0        800
+      7499 ALLEN            1600        300       1900
+      7521 WARD             1250        500       1750
+      7566 JONES            2975          0       2975
+      7654 MARTIN           1250       1400       2650
+      7698 BLAKE            2850          0       2850
+      7782 CLARK            2450          0       2450
+      7839 KING             5000          0       5000
+      7844 TURNER           1500          0       1500
+      7900 JAMES             950          0        950
+      7902 FORD             3000          0       3000
+      7934 MILLER           1300          0       1300
+
+	12개 행이 선택되었습니다.  
+    
+14.   emp 테이블에서 10번 부서원 정보 조회 
+SELECT *
+FROM emp
+WHERE deptno = 10;
+
+14-2. emp 테이블에서 10번 부서원을 제외한 사원 정보를 조회(출력)
+SELECT *
+FROM emp
+WHERE deptno != 10;
+
+14-3. emp 테이블에서 10번 또는 20번 부서원 정보를 조회
+SELECT *
+FROM emp
+WHERE deptno IN(10,20);
+
+15. emp 테이블에서 사원명이 'king' 인 사원의 정보 조회
+SELECT *
+FROM emp
+WHERE ename = UPPER('king');
+
+16. insa 테이블에서 출생지역이 수도권인 사원의 정보를 조회.  
+  
+17. emp 테이블에서 부서번호가 10번이고, 잡이 CLERK  인 사원의 정보를 조회하는 쿼리 작성.  
+SELECT *
+FROM emp
+WHERE deptno = 10 AND job = 'CLERK';
+
+17-2. emp 테이블에서 잡이 CLERK 이고, 부서번호가 10번이 아닌 사원의 정보를 조회하는 쿼리 작성.
+SELECT *
+FROM emp
+WHERE deptno != 10 AND job = 'CLERK';
+
+17-3.  emp 테이블에서 부서번호가 30번이고, 커미션이 null인 사원의 정보를 조회하는 쿼리 작성.
+  ( ㄱ.  deptno, ename, sal, comm,  pay 컬럼 출력,  pay= sal+comm )
+  ( ㄴ. comm이 null 인 경우는 0으로 대체해서 처리 )
+  ( ㄷ. pay 가 많은 순으로 정렬 )  
+  SELECT deptno, ename, sal, comm,  sal+NVL(comm,0)pay
+  FROM emp
+  WHERE deptno = 30 AND comm IS NULL
+  ORDER BY pay; -- 기본 오름차순 정렬(ASC 생략된 것)
+  --ORDER BY pay DESC -- 내림차순 정렬
+  
+18. Alias 를 작성하는 3가지 방법을 적으세요.
+   SELECT deptno, ename 
+     , sal + comm   AS"pay"
+     , sal + comm   "pay"
+     , sal + comm   pay  --> 공백이 없다면
+    FROM emp; 
+  
+19. insa 테이블에서  총 사원수를 출력하는 쿼리를 작성하세요. 
+SELECT COUNT(*) "총 사원수" or 총_사원수
+FROM insa;
+
+20. hr 계정의 비밀번호 변경과 계정 잠금 해제 하는 쿼리를 작성하세요. 
+ALTER USER hr IDENTIFIED BY lion ACCOUNT UNLOCK;
+
+21. emp 테이블에서 사원들의 잡의 종류 조회 하는 쿼리를 작성하세요.
+SELECT DISTINCT job
+FROM emp;
+
+
+
+
+
+
+
+
+
+
