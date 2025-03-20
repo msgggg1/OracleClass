@@ -1,0 +1,148 @@
+1. insa테이블에서 ssn 컬럼을 통해서 year, month, date, gender 출력
+SELECT ssn
+        ,SUBSTR(ssn,1,2)year
+        ,SUBSTR(ssn,3,2)month
+        ,SUBSTR(ssn,5,2)"DATE"
+        ,SUBSTR(ssn,8,1)GENDER
+FROM insa;
+
+    [실행 결과]
+      SSN          YEAR MONTH DATE GENDER  
+    ---------- ------ ---- ----- -----
+    771212-1022432	77	12	12	1
+    801007-1544236	80	10	07	1
+    770922-2312547	77	09	22	2
+    790304-1788896	79	03	04	1
+    811112-1566789	81	11	12	1
+    :
+    60개 행이 선택되었습니다. 
+
+2. insa 테이블에서 70년대 12월생 모든 사원 아래와 같이 주민등록번호로 정렬해서 출력하세요.
+SELECT name, ssn
+FROM insa
+WHERE ssn LIKE '7_12%'
+ORDER BY ssn;
+
+
+    NAME                 SSN           
+    -------------------- --------------
+    문길수               721217-1951357
+    김인수               731211-1214576
+    홍길동               771212-1022432   
+
+3. insa 테이블에서 70년대 남자 사원만 조회.    
+    ㄱ. LIKE 연산자 사용.    
+SELECT *
+FROM insa
+WHERE ssn LIKE '7_____-1%';
+
+    ㄴ. REGEXP_LIKE() 함수 사용   
+SELECT *
+FROM insa
+WHERE REGEXP_LIKE (ssn , '^7\d{5}-1\d{6}');
+
+4. emp 테이블에서 사원명(ename) 속에  'la' 문자열을 포함하는 사원 정보를 조회(출력)
+   (조건 : 'la'문자는 대소문자를 구분하지 않는다.    la   La  lA  LA )
+SELECT *
+FROM emp
+WHERE REGEXP_LIKE (ename,'.*la.*', 'i');
+
+   
+5.insa 테이블에서 남자는 'X', 여자는 'O' 로 성별(gender) 출력하는 쿼리 작성   
+    NAME                 SSN            GENDER
+    -------------------- -------------- ------
+    홍길동               771212-1022432    X
+    이순신               801007-1544236    X
+    이순애               770922-2312547    O
+    김정훈               790304-1788896    X
+    한석봉               811112-1566789    X 
+    :
+ 
+6. insa 테이블에서 2000년 이후 입사자 정보 조회하는 쿼리 작성
+    ㄱ. TO_CHAR() 함수 사용해서 풀기
+SELECT name, ibsadate
+FROM insa
+WHERE TO_CHAR(SUBSTR(ibsadate,1,2)) <= SUBSTR(TO_CHAR(SYSDATE,'yyyy'),3,2);
+
+    ㄴ. EXTRACT() 함수 사용해서 풀기.
+SELECT name, ibsadate
+FROM insa
+WHERE SUBSTR(EXTRACT(YEAR FROM ibsadate),3,2) <= SUBSTR(EXTRACT(YEAR FROM sysdate),3,2);
+    
+    NAME                 IBSADATE
+    -------------------- --------
+    이미성               00/04/07
+    심심해               00/05/05
+    권영미               00/06/04
+    유관순               00/07/07   
+
+7. 현재 시스템의 날짜 출력하는 쿼리를 작성하세요. 
+    SELECT ( ㄱ  SYSDATE     ), ( ㄴ CURRENT TIMESTAMP         ) 
+    FROM dual;
+    
+8. dept 테이블에서 10번 부서명을 확인하고
+   부서명을 'QC100%'로 수정하고 
+   LIKE 연산자를 사용해서 100%가 포함된 부서를 검색하는 쿼리를 작성하세요. 
+   그리고 마지막엔 ROLLBACK 하세요.
+
+SELECT dname
+FROM dept
+WHERE deptno = 10;
+
+UPDATE dept SET dname = 'QC100%'
+WHERE deptno = 10;
+
+SELECT *
+FROM dept
+WHERE dname LIKE '%100\%%' ESCAPE '\';
+
+ROLLBACK;
+
+
+   
+9. TBL_TEST 테이블에서 email 컬럼의   .co.kr 을   .com 으로 변경해서 출력하는 쿼리를 작성하세요.
+
+SELECT email, REPLACE(email,'.co.kr' , '.com')"EMAIL CHANGE"
+FROM tbl_test;
+
+실행결과)
+    EMAIL               EMAIL CHANGE
+--------------------------------------------------------------------------------
+http://arirang.co.kr	http://arirang.com
+http://seoul.co.kr	    http://seoul.com
+http://home.co.kr	    http://home.com
+
+
+
+10. 오늘날짜의 년,월,일, 요일을 출력하는 쿼리를 작성하세요. 
+SELECT EXTRACT(YEAR FROM sysdate)년,
+        EXTRACT(MONTH FROM sysdate)월,
+        EXTRACT(DAY FROM sysdate)일,
+        TO_CHAR(sysdate, 'day')요일
+FROM dual;
+
+11. emp 테이블에서 아래와 같이 출력하는 쿼리를 작성하세요. 
+
+SELECT deptno, (ename || '('|| TO_CHAR(sal+NVL(comm,0))|| ')' )"ENAME(PAY)", LPAD(' ',(sal+NVL(comm,0))/100+1,'#')bar
+FROM emp
+ORDER BY 1, sal+NVL(comm,0) DESC;
+
+   ㄱ. deptno 오름차순 정렬 후 pay 로 내림차순 정렬
+   ㄴ. pay가 100 단위로 # 출력
+   ㄷ. pay = sal + comm
+   
+   실행결과)
+DEPTNO ENAME(PAY) BAR
+--- ------------ -------------------------------------------------------------
+10	KING(5000)	 ##################################################
+10	CLARK(2450)	 #########################
+10	MILLER(1300) #############
+20	FORD(3000)	 ##############################
+20	JONES(2975)	 ##############################
+20	SMITH(800)	 ########
+30	BLAKE(2850)	 #############################
+30	MARTIN(2650) ###########################
+30	ALLEN(1900)	 ###################
+30	WARD(1750)	 ##################
+30	TURNER(1500) ###############
+30	JAMES(950)	 ##########
