@@ -17,8 +17,8 @@ SELECT *
 FROM scott.emp; -- scott.emp -> arirang 시노님
 -- 시노님 생성, 삭제 : DBA 만 가능
 --【형식】
---	CREATE [PUBLIC] SYNONYM [schema.]synonym명
---  	FOR [schema.]object명(내가 사용하고자 하는);
+--	CREATE [PUBLIC] SYNONYM [schema.]synonym명(내가 사용하고자 하는)
+--  	FOR [schema.]object명;
 CREATE PUBLIC SYNONYM arirang
 FOR scott.emp;
 --SYNONYM ARIRANG이(가) 생성되었습니다.
