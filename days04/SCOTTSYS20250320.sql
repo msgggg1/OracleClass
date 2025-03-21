@@ -78,8 +78,8 @@ SELECT name, ssn
 --        if( g == 1) X else O
 --      , [1] 둘 중 하나 null로 변환
 --   ,replace ( replace ( SUBSTR(ssn, 8, 1) ,'1', 'X'), '2', 'O') gender 
---   ,NVL2 (replace (SUBSTR(ssn,8,1), '1', null), 'O', 'X') )gender
-   ,NVL2 (NULLIF( SUBSTR(ssn,8,1), '1' ), 'O', 'X') )gender -- MOD 추가해야 더 정확 
+   ,NVL2 (replace (SUBSTR(ssn,8,1), '1', null), 'O', 'X') )gender
+   ,NVL2 (NULLIF( SUBSTR(ssn,8,1), '1' ), 'X', 'O') )gender -- MOD 추가해야 더 정확 
    
    -- CASE문, DECODE 문 사용할 수 있다. 
 FROM insa;
@@ -280,8 +280,10 @@ WHERE deptno = 20;
 -- ORA-02292: integrity constraint (SCOTT.FK_DEPTNO) violated - child record found : 부서테이블(부모) 번호 참조함. 테이블 생성시 설정가능
 
 -- [DML] INSERT, DELETE
+-- [DML] INSERT, DELETE
 DELETE FROM dept
-
+WHERE deptno IN ( 10, 30, 50 );
+WHERE deptno >= 50;
 
 -- [문제]
 SELECT *
