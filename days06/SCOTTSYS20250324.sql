@@ -1,6 +1,4 @@
 -- SCOTT --
-DESC emp;
-desc dept;
 
 --[ 문제 1 ] table JOIN 하기
 -- 풀이 [1] 
@@ -16,7 +14,13 @@ ORDER BY dname;
 -- [ 문제 2 ] emp 테이블에서 job의 개수 조회
 SELECT COUNT(DISTINCT job)
 FROM emp;
-
+-- 
+SELECT COUNT(*)
+FROM (
+        SELECT DISTINCT job
+        FROM emp
+     );
+     
 -- [ 문제 2-2 ] emp 테이블의 각 부서별 사원수 조회
 SELECT COUNT(*) -- 전체 사원 수 12명
 FROM emp;
@@ -41,7 +45,7 @@ FROM emp e
 ORDER BY deptno ASC;
 
 --[ 추가 ]  + 사원이 존재하지 않는 부서까지 출력 (40, 0)
-SELECT DISTINCT deptno
+SELECT deptno
         , ( SELECT COUNT(*) FROM emp WHERE deptno = d.deptno )사원수
 FROM dept d;
 
@@ -78,10 +82,10 @@ ORDER BY deptno;
 --    emp 사원 테이블 10-30    40X
 
 --SELECT d.deptno, COUNT(*) -- COUNT(*) -> null 포함 (40번 부서도 1 출력)
-SELECT d.deptno, COUNT(ename) -- COUNT(칼럼) -> null 제외
+SELECT d.deptno, dname, COUNT(ename) -- COUNT(칼럼) -> null 제외
 FROM emp e, dept d
 WHERE e.deptno(+) = d.deptno -- 한쪽이 모두 출력되게(+) -> OUTER JOIN
-GROUP BY d.deptno
+GROUP BY d.deptno, dname
 ORDER BY d.deptno ASC;
 
 -- COUNT() 함수
@@ -100,7 +104,7 @@ WHERE e.deptno(+) = d.deptno -- 한쪽이 모두 출력되게(+) -> OUTER JOIN
 GROUP BY d.deptno, d.dname
 ORDER BY d.deptno ASC;
 
--- 위의 JOIN 쿠러리를 JOIN~ON 구문으로 수정
+-- 위의 JOIN 쿼리를 JOIN~ON 구문으로 수정
 SELECT d.deptno, dname, COUNT(ename) 
 --FROM emp e JOIN dept d ON e.deptno(+) = d.deptno -- 잘못된 구문
 --FROM emp e RIGHT [OUTER] JOIN dept d ON e.deptno = d.deptno -- OUTER JOIN 할 테이블 있는 방향 적기
@@ -124,9 +128,9 @@ FROM dual;
 -- 3) 단점 : 비교 연산은 '='만 가능하다. -> CASE 함수
 
 -- 자바의 경우
---if(조건식){
---     명령코딩;
---}
+if(조건식){
+     /명령코딩;
+}
 
 if(A=B){
     return C;
@@ -152,19 +156,11 @@ if ( A = B ) {
 ==> DECODE(A, B, ㄱ, C, ㄴ, D, ㄷ, ㄹ);
 
 -- [ 문제 ]  insa 테이블에서 이름, 주민번호, 성별('남자','여자') 출력
--- (1) 이전 풀이
-SELECT name, ssn, NVL2(NULLIF(SUBSTR(ssn,-7,1),'1'),'여자','남자') 성별
-FROm insa;
-
-SELECT name, ssn, NVL2(NULLIF(MOD((SUBSTR(ssn,-7,1)),2), 1),'여자','남자') 성별
-FROm insa;
-
-SELECT name, ssn, REPLACE(REPLACE(MOD((SUBSTR(ssn,-7,1)),2), 1, '남자'), 0,'여자') 성별
-FROm insa;
-
--- (2) DECODE()
-SELECT name, ssn, DECODE(SUBSTR(ssn,-7,1),'1','남자','2','여자')성별
-SELECT name, ssn, DECODE(SUBSTR(ssn,-7,1),'1','남자','여자')성별
+SELECT name, ssn
+  , NVL2( NULLIF( MOD( SUBSTR(ssn, -7, 1) , 2 ) , 1 ), 'O', 'X') gender
+  , REPLACE(REPLACE(MOD(SUBSTR(ssn, 8, 1) , 2 ), 1, 'X'), 0, 'O') gender
+  , DECODE(  MOD( SUBSTR(ssn, -7, 1) , 2 ), 1 , '남자', '여자' ) gender
+  , DECODE(  MOD( SUBSTR(ssn, -7, 1) , 2 ), 1 , '남자', 0, '여자' ) gender
 -- CASE 함수 추가 (CASE - END 구문 전체 먼저 적기)
                 , CASE SUBSTR(ssn,-7,1) WHEN '1' THEN '남자'
                                         ELSE          '여자'
@@ -210,13 +206,10 @@ SELECT empno, ename, sal, comm, deptno
         DECODE(deptno, 10, (sal+NVL(comm, 0))*1.15
                      , 20, (sal+NVL(comm, 0))*1.1
                      , (sal+NVL(comm, 0))*1.2)인상된pay
-        , (sal+NVL(comm, 0)) * DECODE(deptno, 10, 1.15, 20,1.1, 1.2 ) 인상된pay
-FROM emp
-ORDER BY deptno;
+        , (sal+NVL(comm, 0)) * DECODE(deptno, 10, 1.15
+                                            , 20,1.1
+                                                , 1.2 ) 인상된pay
 
--- CASE 함수
-SELECT empno, ename, sal, comm, deptno
-        , sal+NVL(comm, 0) pay
         , (sal+NVL(comm, 0)) * DECODE(deptno, 10, 1.15, 20,1.1, 1.2 ) 인상된pay
 --        , CASE 컬럼명 | 수식 WHEN THEN
 --                            WHEN THEN
@@ -225,8 +218,8 @@ SELECT empno, ename, sal, comm, deptno
 --                            ELSE
 --          END 별칭
         , (sal+NVL(comm, 0))*CASE deptno WHEN 10 THEN 1.15
-                            WHEN 20 THEN 1.1
-                            ELSE         1.2
+                                         WHEN 20 THEN 1.1
+                                         ELSE         1.2
           END 별칭
 FROM emp
 ORDER BY deptno;
@@ -253,7 +246,7 @@ SELECT SYSDATE -- 함수다.
         , ROUND(SYSDATE, 'YEAR') -- [3월] 25/01/01    (6월 기준)
 FROm dual;
 --------------------------------------
-SELECT SYSDATE
+SELECT SYSDATE now
         , TO_CHAR( SYSDATE, 'DS TS')
         , TRUNC( SYSDATE) -- 시간, 분, 초 절삭
         , TO_CHAR ( TRUNC ( SYSDATE), 'DS TS') -- 2025/03/24 오전 12:00:00
@@ -331,10 +324,31 @@ SELECT SYSDATE
         ,TO_cHAR(SYSDATE, 'DY') --'월'
         ,TO_cHAR(SYSDATE, 'DAY') --'월요일'
         ,NEXT_DAY(SYSDATE, '금')
+        , NEXT_DAY( SYSDATE, '월')
 FROM dual;
+
+--------------------------------------------------------------------------------
+SELECT CURRENT_DATE, CURRENT_TIMESTAMP
+FROM dual;
+--------------------------------------------------------------------------------
 
 ---- [문제] 5월 첫 번째 월요일 휴강
 SELECT NEXT_DAY(LAST_DAY(ADD_MONTHS(SYSDATE,1)),'월')
+FROM dual;
+
+-- [ 문제 ] 5월 첫 번째 목요일날 휴강
+--       4월의 마지막 날짜에서  가까운 목
+SELECT 
+    TO_DATE('25', 'YY')  --년도 -> 날짜 변환 25/03/01
+--      TO_DATE('25/05', 'YY/MM')  --   25/05/01
+--      , NEXT_DAY( TO_DATE('25/05', 'YY/MM'), '목')
+--      LAST_DAY( ADD_MONTHS( TO_DATE('25/05', 'YY/MM'), -1) )
+    ,NEXT_DAY(  TO_DATE('25/05', 'YY/MM') - 1, '목')
+FROM dual;
+
+--
+SELECT NEXT_DAY(LAST_DAY(ADD_MONTHS(SYSDATE,1)),'목')
+,  NEXT_DAY ( LAST_DAY ( TO_DATE ( '25/04/01' ) ) ,   '목'  )
 FROM dual;
 
 ------------------------------------------
@@ -367,7 +381,8 @@ SELECT ename ,( sal+NVL(comm,0))*12 연봉
         , TO_CHAR(( sal+NVL(comm,0))*12, 'L9G999G999D00')
 FROM emp;
 
-----------------------------------------
+--------------------------------------------------------------------------------
+-- [문제]           Date 날짜 -> 내가 원하는 문자열 변환해서 출력. TO_CHAR()
 -- [문제] insa테이블에서 입사일자를 '1998년 10월 11일 일요일' 형식으로 출력.
 SELECT name, ibsadate
         ,TO_CHAR (ibsadate, 'DL')
@@ -386,9 +401,12 @@ FROM emp;
 SELECT COUNT(*), COUNT(ename), COUNT(comm)
         , SUM(comm)
         , AVG (comm) -- 550 / 총합 4 -- null 제외 -> 모든 집계합수는 null을 제외시킨다. 
+        , SUM(comm)/COUNT(comm) -- 550
         ,SUM(sal)
         ,SUM(sal)/COUNT(*) 
         ,AVG(sal)
+--     , SUM( comm ) / COUNT(*)     -- 주의
+--     , SUM( comm ) / COUNT(comm)  -- 주의
 FROM emp;
 
 SELECT MAX(sal), MIN(sal)
@@ -399,7 +417,7 @@ FROM emp;
 -- GROUP BY 절 + HAVING 절 + 추가적 설명
 -- [문제] insa 테이블에서 총사원수, 남자사원수, 여자사원수를 조회
 -- 1) UNION ALL
-SELECT '전체'" ", COUNT(*)총사원수
+SELECT '전체'"분류", COUNT(*)총사원수
 FROM insa
 UNION ALL
 SELECT '남자',COUNT(*)
@@ -415,13 +433,16 @@ SELECT ( SELECT COUNT(*) "여자" FROM insa WHERE SUBSTR(ssn, -7, 1) = 1) "여�
             ,  ( SELECT COUNT(*) FROM insa)
 FROM dual;
 
-SELECT COUNT(*) 
-        , (SELECT COUNT(*) FROM insa WHERE SUBSTR(ssn,-7,1) = 1)남자사원수
-        , (SELECT COUNT(*) FROM insa WHERE SUBSTR(ssn,-7,1) = 2)여자사원수
-FROM insa;
---COUNT(), DECODE()또는 CASE 함수
+SELECT 
+  ( SELECT COUNT(*) "여자" FROM insa WHERE SUBSTR(ssn, -7, 1) = 1) "여자 사원수" 
+  , ( SELECT COUNT(*) "남자" FROM insa WHERE SUBSTR(ssn, -7, 1) = 2) "남자 사원수" 
+  , ( SELECT COUNT(*)  FROM insa)
+FROM dual;
+
+--COUNT(), DECODE()
 SELECT COUNT(*)"총 사원수"
         ,COUNT( DECODE(MOD(SUBSTR(ssn, -7, 1),2 ),1,'O'))"남자 사원수"
+        ,   COUNT( DECODE(MOD( SUBSTR(ssn, -7,1), 2 ),0,'X') ) "여자 사원수"
 FROM insa;
 
 -- CASE()
@@ -482,7 +503,8 @@ ORDER BY deptno ASC;
 
 -- [ 문제 ] 각 부서별 최고 급여 사원 정보 조회
 -- [ 문제 ] 각 부서별 최고 급여액 정보 조회
-SELECT deptno,MAX(sal+NVL(comm,0)) maxpay
+SELECT deptno
+            ,MAX(sal+NVL(comm,0)) maxpay
             ,MIN(sal+NVL(comm,0)) minpay
             , SUM(sal+NVL(comm,0)) sumpay
             , AVG(sal+NVL(comm,0))avgpay
@@ -582,5 +604,13 @@ WHERE i.사원수 >= 10;
         
 -- [문제] insa 테이블에서 여자 사원수가 5명 이상인 부서명, 사원명 조회
 
-SELECT buseo, ename
-FROM 
+SELECT buseo, name
+FROM insa
+WHERE buseo IN (
+                SELECT buseo
+                FROM insa 
+                WHERE MOD(SUBSTR(ssn,-7, 1), 2) = 0
+                GROUP BY buseo
+                HAVING COUNT(*) >= 5
+                )
+ORDER BY buseo, name;
