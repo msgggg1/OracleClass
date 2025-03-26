@@ -17,9 +17,9 @@ SELECT *
 FROM(
     SELECT emp.*
         , PERCENT_RANK() OVER (ORDER BY sal DESC) sal_rank
-    FROM emp;
+    FROM emp
     )
-WHERE sal_rank <= 0.2
+WHERE sal_rank <= 0.2;
 
 -- [나]
 SELECT e.*, ROWNUM
