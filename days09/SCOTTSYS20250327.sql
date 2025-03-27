@@ -18,9 +18,9 @@ FROM t JOIN dept d ON t.deptno = d.deptno
 --[2] SQL 연산자 (ANY, SOME, ALL, EXISTS)
 SELECT d.deptno, d.dname
 FROM dept d
-WHERE NOT EXISTS(SELECT COUNT(empno) FROM emp WHERE deptno = d.deptno);
+WHERE NOT EXISTS(SELECT empno FROM emp WHERE deptno = d.deptno);
 
---[3]
+--[3] SQL 연산자 ( ANY , SOME , ALL , EXISTS )
 SELECT d.deptno, d.dname
 FROM dept d
 WHERE (SELECT COUNT(empno) FROM emp WHERE deptno = d.deptno) = 0;
@@ -38,20 +38,11 @@ HAVING COUNT(empno)=0;
 
 SELECT buseo, COUNT(*) 
 FROm insa
-WHERE MOD(SUBSTR(ssn,-1,1),2)= 0
+WHERE MOD(SUBSTR(ssn,-7,1),2)= 0
 GROUP BY buseo
 HAVING COUNT(*) >= 5;
 
-SELECT buseo, 
-FROM insa i
-WHERE i.deptno = deptno
-GROUP BY buseo
 
-WITH i AS(
-    SELECT *
-
-)
-;
 -- [문제] insa 테이블
 --     [총사원수]      [남자사원수]      [여자사원수] [남사원들의 총급여합]  [여사원들의 총급여합] [남자-max(급여)] [여자-max(급여)]
 ------------ ---------- ---------- ---------- ---------- ---------- ----------
@@ -62,7 +53,7 @@ FROM insa;
 
 SELECT COUNT(*), SUM(basicpay), MAX(basicpay)
 FROM insa
-WHERE MOD(SUBSTR(ssn,-1,1),2)= 1 ;
+WHERE MOD(SUBSTR(ssn,-7,1),2)= 1 ;
 
 SELECT COUNT(*), SUM(basicpay), MAX(basicpay)
 FROM insa
@@ -79,7 +70,7 @@ SELECT COUNT(*)
 FROM insa;
 
 -- [2] 풀이
-SELECT CASE MOD(SUBSTR(ssn,-1,1),2)
+SELECT CASE MOD(SUBSTR(ssn,-7,1),2)
         WHEN 1 THEN '남자'
         WHEN 0 THEN      '여자'
         ELSE        '전체'
@@ -88,7 +79,7 @@ SELECT CASE MOD(SUBSTR(ssn,-1,1),2)
         , SUM(basicpay)
         , MAX(basicpay)
 FROM insa
-GROUP BY ROLLUP( MOD(SUBSTR(ssn,-1,1),2));
+GROUP BY ROLLUP( MOD(SUBSTR(ssn,-7,1),2));
 
 -- [문제] emp 테이블에서~
 --      각 부서의 사원수, 부서 총급여합, 부서 평균급여
@@ -112,10 +103,10 @@ ORDER BY d.deptno;
 -- ROLLUP, CUBE 설명 --
 -- GROUP BY 절에서 사용되는 그룹별 부분합을 추가로 보여주는 역할
 -- 즉, 추가적인 집계 정보를 보여준다. 
-SELECT MOD(SUBSTR(ssn,-1,1),2) 성별
+SELECT MOD(SUBSTR(ssn,-7,1),2) 성별
         , COUNT(*) 사원수
 FROM insa
-GROUP BY MOD(SUBSTR(ssn,-1,1),2)
+GROUP BY MOD(SUBSTR(ssn,-7,1),2)
 UNION ALL
 SELECT null, COUNT(*)
 FROM insa;--
@@ -123,7 +114,7 @@ SELECT MOD(SUBSTR(ssn,-7,1),2) 성별
         , COUNT(*) 사원수
 FROM insa
 GROUP BY CUBE(MOD(SUBSTR(ssn,-7,1),2));
-GROUP BY ROLLUP(MOD(SUBSTR(ssn,-7,1),2))
+--GROUP BY ROLLUP(MOD(SUBSTR(ssn,-7,1),2));
 
 --[ ROLLIP/CUBE 차이점]
 -- 1차 부서별 그룹핑, 2차 직위별로 그룹핑
