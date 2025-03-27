@@ -91,7 +91,88 @@ FROM (
         CONNECT BY LEVEL <= EXTRACT ( DAY FROM LAST_DAY(TO_DATE(:yyyymm , 'YYYYMM') ) )
 )  t 
 
-
+;
 -- [문제]emp 테이블에서 
 -- 사원수가 가장 많은 부서명(dname), 사원수
 -- 사원수가 가장 적은 부서명, 사원수 출력
+WITH a AS(
+    SELECT d.dname, COUNT(*)사원수
+    FROM emp e RIGHT JOIN dept d ON e.deptno = d.deptno 
+    GROUP BY d.dname
+)
+SELECT *
+FROM a
+WHERE 사원수 IN ((SELECT MAX(사원수) FROM a),
+                                (SELECT MIN(사원수) FROM a)  )              ;
+                                
+        -- 집가서 확인                        --
+WITH a AS(
+    SELECT d.dname, COUNT(*)사원수
+    FROM emp e RIGHT JOIN dept d ON e.deptno = d.deptno 
+    GROUP BY d.dname
+) , b AS(
+    SELECT a.*
+            ,RANK() OVER(ORDER BY 사원수 DESC) 순위 
+    FROM a
+)
+SELECT *
+FROM b
+WHERE 순위 IN ((SELECT MAX(사원수) FROM a),
+                                (SELECT MIN(사원수) FROM a)  )              ;
+                                
+-- [ 문제 ] JOB 별 사원수를 출력(조회)
+-- COUNT(*), DECODE()
+SELECT
+    COUNT(DECODE(job, 'CLERK', 'O'))CLERK
+     ,COUNT( DECODE(job, 'SALESMAN', 'O') )SALESMAN
+    ,COUNT( DECODE(job, 'PRESIDENT', 'O') )PRESIDENT
+    ,COUNT( DECODE(job, 'MANAGER', 'O') )MANAGER
+    ,COUNT( DECODE(job, 'ANALYST', 'O') )ANALYST
+FROM emp;   
+                
+SELECT *                
+FROM(
+    SELECT job
+    FROM emp
+)e
+PIVOT (COUNT)
+                                
+
+--[문제] 각 부서별 직위별   최소사원수, 최대사원수 조회.
+-- 부서  직위 최소사원수  직위 최대사원수
+--개발부   부장     1          사원     9
+--기획부   부장     2          대리     3
+--  :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

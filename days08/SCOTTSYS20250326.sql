@@ -343,14 +343,16 @@ WITH t AS(
     GROUP BY d.deptno, dname
     ORDER BY d.deptno ASC
 ), s AS(
-SELECT t.*
+    SELECT t.*
          , RANK() OVER(ORDER BY cnt DESC)cnt_rank 
+    FROm t
 )
 SELECT s.*
     , CASE s.cnt_rank
         WHEN 1 THEN '많은 부서'
         ELSE '적은 부서'
         END
+FROm s;
 
 
 -- 내 풀이
