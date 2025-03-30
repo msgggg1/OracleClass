@@ -140,14 +140,12 @@ SELECT seq_tbl_board.CURRVAL -- 어디까지 썼나 확인할때 CURRVAL
 FROm dual;
 
 -- [ title 컬럼명 - subject 컬럼명 수정 ]
--- [ writer 컬럼 크기 20 -> 40 크기 확장 ]
---ALTER TABLE tbl_sample
---RENAME COLUMN bigo TO memo;
 ALTER TABLE tbl_board
 RENAME COLUMN title TO subject;
-
+-- [ writer 컬럼 크기 20 -> 40 크기 확장 ]
 ALTER TABLE tbl_board
 MODIFY writer VARCHAR(40) ;
+
 -- [ 테이블 생성하는 방법 ]
 -- 1. CREATE TABLE문 사용해서 테이블 생성
 -- 2. 서브쿼리를 사용한 테이블 생성
@@ -274,6 +272,8 @@ from tbl_emp;
 -- [INSERT] emp 테이블의 30번 부서원들 -> tbl_emp 테이블에 insert
 -- (원래) insert into 테이블명     values (컬럼값..); 
  -- (+)서브쿼리로 insert 가능
+ -- (기억)
+--INSERT INTO 테이블명  [( 컬럼명... )] VALUES (컬럼값...);
 insert into tbl_emp (
     select *
     from emp 
@@ -393,7 +393,7 @@ insert into tbl_sales values(1102,5,300,300,230,120,150);
 
 SELECT *
 FROM tbl_sales;
-
+-- 다중 INSERT문 4번째 경우~ 
 create table tbl_sales_data(
     employee_id        number(6),
     week_id            number(2),
@@ -519,10 +519,13 @@ SELECT num, tot
         , (SELECT COUNT(*)+1 FROm tbl_score WHERE s.tot<tot)
 FROM tbl_score s;
 --
-SELECT num, tot
-        , RANK() over(order by tot desc) r
-FROM tbl_score
-order by num;
+SELECT r
+FROM (
+    SELECT num, tot
+        , RANK() OVER( ORDER BY tot DESC ) r
+    FROM tbl_Score
+)
+WHERE num = 1005;
 -- [1]
 UPDATE tbl_score s
 SET rank = (SELECT COUNT(*)+1 FROm tbl_score WHERE s.tot<tot);
@@ -530,18 +533,18 @@ SET rank = (SELECT COUNT(*)+1 FROm tbl_score WHERE s.tot<tot);
 --[2]
 UPDATE tbl_score s
 SET rank = (
-SELECT r
-FROM(
-    SELECT num, tot
-        , RANK() over(order by tot desc) r
-    FROM tbl_score
-)
- WHERE num = s.num
+    SELECT r
+    FROM(
+        SELECT num, tot
+            , RANK() over(order by tot desc) r
+        FROM tbl_score
+        )
+    WHERE num = s.num
 );
 
 commit;
 
--- [문제] 등급 수정
+-- [문제] 등급 수정 
 -- avg 90 이상 '수', 80 이상 '우', ~ '가'
 UPDATE tbl_score
 SET grade = CASE

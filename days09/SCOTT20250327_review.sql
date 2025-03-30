@@ -63,11 +63,100 @@ SELECT d.deptno, COUNT(empno), SUM(sal), AVG(sal)
 FROM emp e RIGHT JOIN dept d ON d.deptno = e.deptno
 GROUP BY d.deptno;
 
+--[문제] 각 부서별 직위별   최소사원수, 최대사원수 조회.
+-- 부서  직위 최소사원수  직위 최대사원수
+-- 개발부	부장	  1	       사원	  9
+-- 기획부	부장	  2	       대리	  3
+--  :
+with i AS(
+    select buseo, jikwi, count(*)사원수
+    from insa
+    group by buseo, jikwi
+), n AS(
+    select buseo, max(사원수)최대사원수, min(사원수)최소사원수
+    from i
+    group by buseo
+)
+select i.buseo  , jikwi, 사원수
+from i JOIN n ON i.buseo = n.buseo
+where 사원수 In(최대사원수, 최소사원수)
+order by buseo;
 
+with i AS(
+    select buseo, jikwi, count(*)사원수
+    from insa
+    group by buseo, jikwi
+)
+select buseo
+    , MIN(jikwi) KEEP (DENSE_rank first order by 사원수 ASC) 직위
+    , min(사원수)
+    , MIN(jikwi) KEEP (DENSE_rank last order by 사원수 ASC) 직위
+    , max(사원수)
+from i
+group by buseo
+order by buseo;
 
+-- [문제] emp 테이블에서 사원 정보 조회
+-- 조건 1) deptno -> dname
+-- 조건 2) 직속상사 mgr -> ename
+select e.empno, e.ename, e.job, m.ename mgr_ename , e.hiredate , dname
+        , e.sal
+        , grade
+from emp e LEFT JOIN dept d ON e.deptno = d.deptno
+           LEFT JOIN emp m ON e.mgr = m.empno  
+           JOIN salgrade s  On e.sal BETWEEN s.losal AND hisal;
+           
+select *
+from salgrade;
 
+select e.empno, e.ename, e.job, m.ename mgr_ename , e.hiredate , dname
+        , e.sal
+        , grade
+from emp e, dept d, emp m, salgrade s
+WHere e.deptno = d.deptno(+) AND e.mgr = m.empno(+) AND
+        e.sal BETWEEN s.losal and hisal;
 
+select t.*
+from(
+    select ename, sal
+            , RANK() over(order by sal desc) r
+            , lead(sal, 1, -1) OVER(ORDER by sal DESC) next_sal
+    from emp
+    )t
+where r = 1 OR next_sal = -1;
 
+-- [문제] PIVOT() emp 테이블에서           1~3  1분기, 4~6 2분기 7~9 3분기   10~12 4분기
+--               입사년도, 분기별  사원수 출력
+--               1980       1     3
+-- (홍길동)
+select *
+from (
+    select TO_char(hiredate, 'YYYY') 입사년도
+            , width_bucket(To_number(TO_CHAR(hiredate, 'mm')),1,13,4 )분기
+    from emp
+)
+pivot ( COUNT(*) for 분기 in (1,2,3,4))
+;
 
+WITH A as (
+    select TO_char(hiredate, 'YYYY') 입사년도
+            , TO_char(hiredate, 'Q') 분기
+    from emp
+)
+select a.*, count(*)
+from  a
+group by 입사년도, 분기;
 
-
+WITH a as (
+    select empno,TO_char(hiredate, 'YYYY') 입사년도
+            , TO_char(hiredate, 'Q') 분기
+    from emp
+), b as(
+    select level 분기
+    from dual
+    connect by level <= 4
+)
+select a.입사년도, b.분기, count(empno)
+from  a partition by(a.입사년도)RIGHT JOIN b on a.분기 = b.분기
+group by 입사년도, b.분기
+order by 입사년도, b.분기;
