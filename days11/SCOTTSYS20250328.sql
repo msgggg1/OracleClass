@@ -76,6 +76,11 @@ insert into emp (empno) values (7369); -- 유일성 제약조건 위배
 1     2025/01/23    5,000,-
 [2]   2025/01/23    2,000,-
 :
+UPDATE 급여 지급 테이블
+SET 지급액 = 2500000
+WHErE 사번 = 2 AND 지급일자 = '2025/01/23'
+-- WHERE 지급일자 = '2025/01/23';
+-- WHERE 사번 = 2;
 변경 시 지급일자, 사번 둘다 필요함. 
 
 -- [ 제약조건 생성]
@@ -127,7 +132,7 @@ values (1111, '서영학', null, null, null, null);
 -- 개체 무결성 위반 (개체를 구분할 수 없음_)
 
 update tbl_constraint
-set ename = 'wjd창기'
+set ename = '정창기'
 where empno = 1111; -- 문제) 2개다 업데이트
 
 -- 
@@ -162,9 +167,18 @@ create table tbl_constraint
 -- NN
 insert into tbl_constraint (empno, ename, deptno, kor, email, city)
 values (null, 'kims', 10, 90, 'kim@naver.com', '서울');
+-- FK
+INSERT INTO tbl_constraint (empno, ename, deptno, kor, email, city )
+VALUES ( 1001, 'kim', 90, 90, 'kim@naver.com', '서울');
+-- CK
+INSERT INTO tbl_constraint (empno, ename, deptno, kor, email, city )
+VALUES ( 1001, 'kim', 10, 190, 'kim@naver.com', '서울');
 -- NN
-insert into tbl_constraint (empno, ename, deptno, kor, email, city)
-values (1001, 'kims', 90, 90, 'kim@naver.com', '서울');
+INSERT INTO tbl_constraint (empno, ename, deptno, kor, email, city )
+VALUES ( 1001, NULL, 10, 190, 'kim@naver.com', '서울');
+-- CK
+INSERT INTO tbl_constraint (empno, ename, deptno, kor, email, city )
+VALUES ( 1001, 'LEE', 10, 190, 'kim@naver.com', '대전');
 
 -- 
 select *
@@ -480,7 +494,7 @@ SELECT b.b_id, b.title, SUM(p_su), price
 FROM book b JOIN danga d ON b.b_id = d.b_id
             JOIN panmai p ON b.b_id = p.b_id
 GROUP BY b.b_id, b.title, price
-ORDER BY b.b_id, b.title, price;
+ORDER BY b.b_id;
 
 
 select *
