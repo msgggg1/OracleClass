@@ -103,7 +103,7 @@ WITH a AS(
 SELECT *
 FROM a
 WHERE 사원수 IN ((SELECT MAX(사원수) FROM a),
-                                (SELECT MIN(사원수) FROM a)  )              ;
+                                (SELECT MIN(사원수) FROM a)  ) ;
                                 
         -- 집가서 확인                        --
 WITH a AS(
@@ -118,13 +118,13 @@ WITH a AS(
 SELECT *
 FROM b
 WHERE 순위 IN ((SELECT MAX(사원수) FROM a),
-                                (SELECT MIN(사원수) FROM a)  )              ;
+                                (SELECT MIN(사원수) FROM a) ) ;
                                 
 -- [ 문제 ] JOB 별 사원수를 출력(조회)
 -- COUNT(*), DECODE()
 SELECT
     COUNT(DECODE(job, 'CLERK', 'O'))CLERK
-     ,COUNT( DECODE(job, 'SALESMAN', 'O') )SALESMAN
+    ,COUNT( DECODE(job, 'SALESMAN', 'O') )SALESMAN
     ,COUNT( DECODE(job, 'PRESIDENT', 'O') )PRESIDENT
     ,COUNT( DECODE(job, 'MANAGER', 'O') )MANAGER
     ,COUNT( DECODE(job, 'ANALYST', 'O') )ANALYST
@@ -135,14 +135,10 @@ FROM(
     SELECT job
     FROM emp
 )e
-PIVOT (COUNT)
+PIVOT (COUNT(job) For job in( 'CLERK' , 'SALESMAN', 'PRESIDENT', 'MANAGER','ANALYST' ));
                                 
 
---[문제] 각 부서별 직위별   최소사원수, 최대사원수 조회.
--- 부서  직위 최소사원수  직위 최대사원수
---개발부   부장     1          사원     9
---기획부   부장     2          대리     3
---  :
+
 
 
 
