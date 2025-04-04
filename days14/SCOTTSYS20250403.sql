@@ -620,21 +620,32 @@ BEGIN
 END;
 
 -- [문제] FOR문사용 구구단 2단~9단(가로)
-
-
-
+BEGIN
+    For vdan in 2..9
+        LOOP
+        for vx in 1..9
+            LOOP 
+            DBMS_OUTPUT.PUT(RPAD(vdan||'*'||vx || '=' || vdan*vx, 10)); 
+            END LOOP;
+      DBMS_OUTPUT.PUT_line(' '); 
+    END LOOP;
+        
+END;
 
 
 -- [문제] FOR문사용 구구단 2단~9단(세로)
+BEGIN
+    for vx in 1..9
+    LOOP
+        for vdan in 2..9
+        LOOP 
+          DBMS_OUTPUT.PUT(RPAD(vdan||'*'||vx || '=' || vdan * vx , 10)); 
+        END LOOP;
+      DBMS_OUTPUT.PUT_line(' '); 
+    END LOOP;
+        
+END;
 
--- FOR vi IN REVERSE 1..10 
---    LOOP
---        IF vi = 10 
---        THEN DBMS_OUTPUT.PUT(vi);
---        ELSE  DBMS_OUTPUT.PUT(vi||'+');
---        END IF;
---         vsum := vsum + vi;
---    END LOOP;
 
 DECLARE
     vdan number(2) := 2;
@@ -689,21 +700,3 @@ BEGIN
   END LOOP;
 END;
 
---[문제] WHILE문 사용 구구단 2~9단 (가로)
---각 단(2단, 3단, ...)을 한 줄에 가로로 출력
-DECLARE
-    vdan        NUMBER := 2; -- 시작 단 (2단)
-    vmultiplier NUMBER;
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('--- 구구단 (WHILE, 가로) ---');
-    WHILE v_dan <= 9 LOOP -- 바깥쪽 루프: 단 (2 ~ 9)
-        v_multiplier := 1; -- 각 단을 시작할 때 곱하는 수를 1로 초기화
-        WHILE v_multiplier <= 9 LOOP -- 안쪽 루프: 곱하는 수 (1 ~ 9)
-            -- 결과값을 오른쪽 정렬하여 2자리로 표시 (LPAD 사용)
-            DBMS_OUTPUT.PUT(v_dan || '*' || v_multiplier || '=' || LPAD(v_dan * v_multiplier, 2) || '  ');
-            v_multiplier := v_multiplier + 1; -- 곱하는 수 증가
-        END LOOP;
-        DBMS_OUTPUT.PUT_LINE(''); -- 한 단 출력이 끝나면 줄바꿈
-        v_dan := v_dan + 1; -- 다음 단으로 증가
-    END LOOP;
-END;
