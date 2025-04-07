@@ -37,7 +37,7 @@
 </folder>
 </info>
 </editorArea>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="video.exerd" partName="video.exerd" path="C:/Class/OracleClass/eXERD/scottProject/video.exerd" title="video.exerd" tooltip="scottProject/video.exerd" workbook="DefaultEditorWorkbook">
+<editor id="com.tomato.exerd.editor.DiagramEditor" name="video.exerd" partName="video.exerd" path="C:/Class/OracleClass/OracleClass/eXERD/scottProject/video.exerd" title="video.exerd" tooltip="scottProject/video.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/scottProject/video.exerd"/>
 </editor>
 <editor id="com.tomato.exerd.editor.DiagramEditor" name="research.exerd" partName="research.exerd" path="C:/Class/OracleClass/eXERD/scottProject/research.exerd" title="research.exerd" tooltip="scottProject/research.exerd" workbook="DefaultEditorWorkbook">
@@ -58,8 +58,8 @@
 <editor id="com.tomato.exerd.editor.DiagramEditor" name="user_game.exerd" partName="user_game.exerd" title="user_game.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\user_game.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game.exerd"/>
 </editor>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" partName="user_game (1).exerd" title="user_game (1).exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\user_game (1).exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1).exerd"/>
+<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" partName="user_game (1).exerd" title="user_game (1).exerd" tooltip="C:\Class\OracleClass\OracleClass\days16\user_game (1).exerd" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
 </editor>
 </editors>
 <views>
@@ -209,6 +209,8 @@
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1).exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/video.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
 </editors>
 <item historyLabel="video.exerd" index="0"/>
 <item historyLabel="research.exerd" index="1"/>
@@ -234,7 +236,9 @@
 <item historyLabel="user_game.exerd" index="7"/>
 <item historyLabel="netflix_film.exerd" index="6"/>
 <item historyLabel="netflix_film.exerd" index="5"/>
-<item active="true" historyLabel="user_game (1).exerd" index="9"/>
+<item historyLabel="user_game (1).exerd" index="9"/>
+<item historyLabel="video.exerd" index="10"/>
+<item active="true" historyLabel="user_game (1).exerd" index="11"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -252,6 +256,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" tooltip="C:\Class\OracleClass\OracleClass\days16\user_game (1).exerd">
+<persistable uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
+</file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\user_game (1).exerd">
 <persistable uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1).exerd"/>
 </file>
