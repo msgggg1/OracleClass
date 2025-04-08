@@ -7,4 +7,7 @@
 	</section>
 	<section name="com.tomato.exerd.core.wizard.NewEXerdWizard">
 	</section>
+	<section name="com.tomato.exerd.diagramwizard.DiagramWizard">
+		<item value="schema" key="method"/>
+	</section>
 </section>

@@ -73,8 +73,7 @@ begin
         OR TO_CHAR(SYSDATE, 'hh24') > 18 
     then
         raise_application_error(-20001, '근무시간 외 처리 불가능.');
-    end if;
-    
+    end if;   
     -- 저장 프로시저는 commit, rollback 해야 한다.
     -- 트리거는 자동으로 commit, rollback 된다. -- 실행되고자 하는 이벤트 따라서 commit/rollback
 --exception
@@ -304,6 +303,7 @@ SELECT * FROM 상품;
 
 
 
+-- 시퀀스 드랍
 
 
 

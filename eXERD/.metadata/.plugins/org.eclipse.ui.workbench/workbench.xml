@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workbench progressCount="16" version="2.0">
 <workbenchAdvisor/>
-<window height="1039" maximized="true" width="974" x="953" y="0">
+<window height="1039" maximized="true" width="974" x="524" y="15">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -26,40 +26,12 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-<part id="4"/>
-<part id="5"/>
-<part id="6"/>
-<part id="7"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="video.exerd" partName="video.exerd" path="C:/Class/OracleClass/OracleClass/eXERD/scottProject/video.exerd" title="video.exerd" tooltip="scottProject/video.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/scottProject/video.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="research.exerd" partName="research.exerd" path="C:/Class/OracleClass/eXERD/scottProject/research.exerd" title="research.exerd" tooltip="scottProject/research.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/scottProject/research.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="survey.exerd" partName="survey.exerd" title="survey.exerd" tooltip="C:\Class\OracleClass\eXERD\survey.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Class/OracleClass/eXERD/survey.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="설문조사(survey).exerd" partName="설문조사(survey).exerd" path="C:/Class/OracleClass/eXERD/scottProject/설문조사(survey).exerd" title="설문조사(survey).exerd" tooltip="scottProject/설문조사(survey).exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/scottProject/설문조사(survey).exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="netflix_film.exerd" partName="netflix_film.exerd" title="netflix_film.exerd" tooltip="C:\Users\user\Desktop\netflix_film.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Desktop/netflix_film.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="netflix_film.exerd" partName="netflix_film.exerd" title="netflix_film.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\netflix_film.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/netflix_film.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="user_game.exerd" partName="user_game.exerd" title="user_game.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\user_game.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game.exerd"/>
-</editor>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" partName="user_game (1).exerd" title="user_game (1).exerd" tooltip="C:\Class\OracleClass\OracleClass\days16\user_game (1).exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
+<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" partName="schema2.exerd" title="schema2.exerd" tooltip="C:\Class\OracleClass\netflix\schema2.exerd" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Class/OracleClass/netflix/schema2.exerd"/>
 </editor>
 </editors>
 <views>
@@ -69,11 +41,9 @@
 <filter element=".*" isEnabled="false"/>
 </filters>
 <expanded>
+<element path="/Netflix"/>
 <element path="/scottProject"/>
 </expanded>
-<selection>
-<element path="/scottProject"/>
-</selection>
 </viewState>
 </view>
 <view id="com.tomato.exerd.ui.views.thumbnail" partName="썸네일">
@@ -89,7 +59,15 @@
 <view id="com.tomato.exerd.ui.views.domain" partName="도메인">
 <viewState/>
 </view>
-<view id="org.eclipse.ui.views.ContentOutline" partName="아웃라인"/>
+<view id="org.eclipse.ui.views.ContentOutline" partName="아웃라인">
+<viewState/>
+</view>
+<view id="org.eclipse.search.ui.views.SearchView" partName="검색">
+<viewState isPinned="false">
+<view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
+<view IMemento.internal.id="com.tomato.exerd.core.searchpage" org.eclipse.search.lastActivation="1"/>
+</viewState>
+</view>
 <view id="org.eclipse.gef.ui.palette_view" partName="Palette">
 <viewState/>
 </view>
@@ -125,6 +103,7 @@
 <view id="com.tomato.exerd.ui.views.thumbnail"/>
 <view id="com.tomato.exerd.modelview3.ModelView3"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
+<view id="org.eclipse.search.ui.views.SearchView"/>
 <view id="com.tomato.exerd.ui.views.domain"/>
 <view id="com.tomato.exerd.validate.ui.ValidateView"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
@@ -147,8 +126,8 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.055526454" ratioLeft="106" ratioRight="1803" relationship="2" relative="leftFolder"/>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@eedb60" ratio="0.87350833" ratioLeft="732" ratioRight="106" relationship="2" relative="org.eclipse.ui.editorss">
+<info part="org.eclipse.ui.editorss" ratio="0.12100576" ratioLeft="231" ratioRight="1678" relationship="2" relative="leftFolder"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@eedb60" ratio="0.89492536" ratioLeft="1499" ratioRight="176" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="com.tomato.exerd.ui.views.thumbnail" appearance="2" expanded="2">
 <page content="com.tomato.exerd.ui.views.thumbnail" label="썸네일"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -157,12 +136,14 @@
 </folder>
 </info>
 <info folder="true" part="rightFolder" ratio="0.249226" ratioLeft="161" ratioRight="485" relationship="4" relative="org.eclipse.ui.internal.ViewStack@eedb60">
-<folder activePageID="com.tomato.exerd.modelview3.ModelView3" appearance="2" expanded="2">
+<folder activePageID="org.eclipse.search.ui.views.SearchView" appearance="2" expanded="2">
 <page content="com.tomato.exerd.modelview3.ModelView3" label="모델"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="아웃라인"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="검색"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
+<part id="2"/>
 </presentation>
 </folder>
 </info>
@@ -172,7 +153,7 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@b528b6" ratio="0.92957747" ratioLeft="858" ratioRight="65" relationship="4" relative="org.eclipse.ui.editorss">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@b528b6" ratio="0.80931747" ratioLeft="747" ratioRight="176" relationship="4" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="com.tomato.exerd.ui.views.domain" label="도메인"/>
 <page content="com.tomato.exerd.validate.ui.ValidateView" label="검토"/>
@@ -200,10 +181,6 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/video.exerd"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/research.exerd"/>
-<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/eXERD/survey.exerd"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/설문조사(survey).exerd"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/video.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Desktop/netflix_film.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/netflix_film.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game.exerd"/>
@@ -211,34 +188,74 @@
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1).exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/video.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/video.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/days16/user_game%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1)%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/research.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/eXERD/survey.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/scottProject/설문조사(survey).exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1)%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/netflix_film.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Desktop/netflix_film.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/netflix_film.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/schema.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/Netflix/untitled.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/Netflix/netflix.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema2.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/schema2%20(1).exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/schema2.exerd"/>
 </editors>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="netflix_film.exerd" index="2"/>
 <item historyLabel="video.exerd" index="0"/>
-<item historyLabel="research.exerd" index="1"/>
-<item historyLabel="video.exerd" index="0"/>
-<item historyLabel="research.exerd" index="1"/>
-<item historyLabel="survey.exerd" index="2"/>
-<item historyLabel="설문조사(survey).exerd" index="3"/>
-<item historyLabel="video.exerd" index="4"/>
-<item historyLabel="netflix_film.exerd" index="5"/>
-<item historyLabel="netflix_film.exerd" index="6"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="netflix_film.exerd" index="6"/>
-<item historyLabel="video.exerd" index="4"/>
-<item historyLabel="netflix_film.exerd" index="6"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="netflix_film.exerd" index="6"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="user_game (1).exerd" index="8"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="user_game (1).exerd" index="8"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="user_game (1).exerd" index="8"/>
-<item historyLabel="user_game.exerd" index="7"/>
-<item historyLabel="netflix_film.exerd" index="6"/>
-<item historyLabel="netflix_film.exerd" index="5"/>
+<item historyLabel="netflix_film.exerd" index="2"/>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="netflix_film.exerd" index="2"/>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="user_game (1).exerd" index="4"/>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="user_game (1).exerd" index="4"/>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="user_game (1).exerd" index="4"/>
+<item historyLabel="user_game.exerd" index="3"/>
+<item historyLabel="netflix_film.exerd" index="2"/>
+<item historyLabel="netflix_film.exerd" index="1"/>
+<item historyLabel="user_game (1).exerd" index="5"/>
+<item historyLabel="video.exerd" index="6"/>
+<item historyLabel="user_game (1).exerd" index="7"/>
+<item historyLabel="video.exerd" index="8"/>
 <item historyLabel="user_game (1).exerd" index="9"/>
-<item historyLabel="video.exerd" index="10"/>
-<item active="true" historyLabel="user_game (1).exerd" index="11"/>
+<item historyLabel="video.exerd" index="8"/>
+<item historyLabel="user_game (1) (1).exerd" index="10"/>
+<item historyLabel="video.exerd" index="8"/>
+<item historyLabel="user_game (1) (1).exerd" index="10"/>
+<item historyLabel="research.exerd" index="11"/>
+<item historyLabel="user_game (1) (1).exerd" index="10"/>
+<item historyLabel="survey.exerd" index="12"/>
+<item historyLabel="user_game (1) (1).exerd" index="10"/>
+<item historyLabel="설문조사(survey).exerd" index="13"/>
+<item historyLabel="user_game (1) (1).exerd" index="10"/>
+<item historyLabel="schema.exerd" index="14"/>
+<item historyLabel="user_game (1) (1).exerd" index="15"/>
+<item historyLabel="schema.exerd" index="14"/>
+<item historyLabel="netflix_film.exerd" index="16"/>
+<item historyLabel="netflix_film.exerd" index="17"/>
+<item historyLabel="netflix_film.exerd" index="16"/>
+<item historyLabel="schema.exerd" index="14"/>
+<item historyLabel="netflix_film.exerd" index="18"/>
+<item historyLabel="schema.exerd" index="19"/>
+<item historyLabel="untitled.exerd" index="20"/>
+<item historyLabel="schema.exerd" index="19"/>
+<item historyLabel="untitled.exerd" index="20"/>
+<item historyLabel="schema.exerd" index="19"/>
+<item historyLabel="netflix.exerd" index="21"/>
+<item historyLabel="schema.exerd" index="19"/>
+<item historyLabel="schema.exerd" index="19"/>
+<item historyLabel="schema2.exerd" index="22"/>
+<item historyLabel="schema2 (1).exerd" index="23"/>
+<item historyLabel="schema2.exerd" index="24"/>
+<item active="true" historyLabel="schema2.exerd" index="24"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -256,6 +273,18 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" tooltip="C:\Class\OracleClass\netflix\schema2.exerd">
+<persistable uri="file:/C:/Class/OracleClass/netflix/schema2.exerd"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="schema.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\schema.exerd">
+<persistable uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema.exerd"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1) (1).exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\user_game (1) (1).exerd">
+<persistable uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/user_game%20(1)%20(1).exerd"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" tooltip="C:\Class\OracleClass\days16\user_game (1).exerd">
+<persistable uri="file:/C:/Class/OracleClass/days16/user_game%20(1).exerd"/>
+</file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="user_game (1).exerd" tooltip="C:\Class\OracleClass\OracleClass\days16\user_game (1).exerd">
 <persistable uri="file:/C:/Class/OracleClass/OracleClass/days16/user_game%20(1).exerd"/>
 </file>
