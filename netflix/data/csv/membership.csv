@@ -1,0 +1,4 @@
+membershipID,price,resolution,concurrentConnection,ad,downDeviceCnt,audiotrackid
+1,5500,1080p,2,1,2,2
+2,13500,1080p,2,0,2,2
+3,17000,4K,4,0,6,1

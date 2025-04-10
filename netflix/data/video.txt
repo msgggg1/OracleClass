@@ -1,0 +1,51 @@
+contentID,contentType,title,originTitle,description,releaseDate,releaseYear,publicDate,runtime,thumbnailURL,mainImage,originLang,productionCountry,registeredAt,updatedAt,availableCountry,videoQuality
+1,영화,기생충,Parasite,가난한 가족과 부유한 가족 사이의 미묘한 관계를 그린 블랙 코미디.,2019-05-30,2019,2019-10-11,132,img/content/sub기생충.jpg,img/content/기생충.jpg,한국어,대한민국,2025-04-09,2025-04-09,대한민국,HD
+2,영화,아이리시맨,The Irishman,한 남자의 시선을 통해 미국 범죄 조직의 역사를 그린 작품.,2019-09-27,2019,2019-11-27,209,img/content/sub아이리시맨.jpg,img/content/아이리시맨.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+3,드라마,기묘한 이야기,Stranger Things,인디애나 주의 작은 마을에서 소년의 실종과 함께 시작되는 미스터리한 사건들.,2016-07-15,2016,2016-07-15,50,img/content/sub기묘한 이야기.jpg,img/content/기묘한 이야기.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+4,드라마,킹덤,Kingdom,조선 시대를 배경으로 한 좀비 스릴러 드라마.,2019-01-25,2019,2019-01-25,45,img/content/sub킹덤.jpg,img/content/킹덤.jpg,한국어,대한민국,2025-04-09,2025-04-09,대한민국,4K
+5,영화,결혼 이야기,Marriage Story,이혼을 앞둔 부부의 감정과 갈등을 그린 드라마.,2019-08-29,2019,2019-12-06,137,img/content/sub결혼 이야기.jpg,img/content/결혼 이야기.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+6,드라마,다크,Dark,독일의 작은 마을에서 시작된 시간 여행과 가족의 비밀을 다룬 드라마.,2017-12-01,2017,2017-12-01,60,img/content/sub다크.jpg,img/content/다크.jpg,독일어,독일,2025-04-09,2025-04-09,독일,HD
+7,영화,로마,Roma,1970년대 멕시코시티의 한 가정의 이야기를 그린 흑백 영화.,2018-08-30,2018,2018-12-14,135,img/content/sub로마.jpg,img/content/로마.jpg,스페인어,멕시코,2025-04-09,2025-04-09,멕시코,4K
+8,드라마,오렌지 이즈 더 뉴 블랙,Orange Is the New Black,여성 교도소에서 벌어지는 다양한 이야기를 그린 드라마.,2013-07-11,2013,2013-07-11,59,img/content/sub오렌지 이즈 더 뉴 블랙.jpg,img/content/오렌지 이즈 더 뉴 블랙.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+9,영화,버드 박스,Bird Box,보이지 않는 존재로부터 살아남기 위한 한 여성의 사투를 그린 스릴러.,2018-11-12,2018,2018-12-21,124,img/content/sub버드 박스.jpg,img/content/버드 박스.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+10,드라마,종이의 집,La Casa de Papel,스페인 조폐국을 점거한 강도들의 이야기를 그린 범죄 드라마.,2017-05-02,2017,2017-05-02,70,img/content/sub종이의 집.jpg,img/content/종이의 집.jpg,스페인어,스페인,2025-04-09,2025-04-09,스페인,HD
+11,영화,익스트랙션,Extraction,납치된 소년을 구하기 위한 용병의 이야기를 그린 액션 영화.,2020-04-24,2020,2020-04-24,117,img/content/sub익스트랙션.jpg,img/content/익스트랙션.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+12,드라마,브리저튼,Bridgerton,19세기 런던 사교계를 배경으로 한 로맨스 드라마.,2020-12-25,2020,2020-12-25,57,img/content/sub브리저튼.jpg,img/content/브리저튼.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+13,영화,트라이얼 오브 더 시카고 7,The Trial of the Chicago 7,1968년 민주당 전당대회 시위를 둘러싼 재판을 그린 드라마.,2020-09-25,2020,2020-10-16,129,img/content/sub트라이얼 오브 더 시카고 7.jpg,img/content/트라이얼 오브 더 시카고 7.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+14,드라마,퀸스 갬빗,The Queen's Gambit,체스 신동 소녀의 성장과 성공을 그린 드라마.,2020-10-23,2020,2020-10-23,60,img/content/sub퀸스 갬빗.jpg,img/content/퀸스 갬빗.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+15,영화,엔올라 홈즈,Enola Holmes,셜록 홈즈의 여동생 엔올라의 모험을 그린 미스터리 영화.,2020-09-23,2020,2020-09-23,123,img/content/sub엔올라 홈즈.jpg,img/content/엔올라 홈즈.jpg,영어,영국,2025-04-09,2025-04-09,영국,HD
+
+위 내용은 content테이블에 존재하는 데이터이며 csv파일 형식으로 저장되어있기 때문에 ,를 기준으로 분리된다.
+
+/* 영상 */
+CREATE TABLE video (
+	videoID INT NOT NULL primary key, /* 영상 ID */
+	seasonNum INT, /* 시즌 번호 */
+	epiNum INT, /* 에피소드 화수 */
+	epiTitle VARCHAR2(150) NOT NULL, /* 에피소드 제목 */
+	epiDescription VARCHAR2(1000), /* 에피소드 설명 */
+	epiruntime INT NOT NULL, /* 에피소드 재생시간(분) */
+	epiImageURL VARCHAR2(255) NOT NULL, /* 에피소드 썸네일 URL */
+	releaseDate DATE NOT NULL, /* 공개일 */
+	contentID INT NOT NULL, /* 콘텐츠 ID */
+	audioLangID INT NOT NULL, /* 음성언어 ID */
+    CONSTRAINT FK_content_TO_video FOREIGN KEY (contentID) REFERENCES content(contentID),
+    CONSTRAINT FK_audioLang_TO_video FOREIGN KEY (audioLangID) REFERENCES audioLang(audioLangID)
+);
+
+위 코드는 넷플릭스에서 사용하는 video 테이블의 전체 코드이다. 다음 요구사항에 맞춰 더미데이터를 생성한다.
+
+1. 각 테이블의 컬럼명, 테이블명, 데이터 타입은 수정 없이 동일하게 유지한다.
+2. pk는 시퀀스로 1부터 증가한다.
+3. 작성하는 내용은 모두 넷플릭스 사이트에 존재하는 내용으로 작성되어야 한다.
+4. 모든 내용은 주석의 내용을 기준으로 작성하며 가능한 한글로 작성한다.
+5. contentID는 content테이블의 pk로 위에 작성했던 데이터로 작성되어야 한다.
+6. 테이블의 모든 내용은 contentID를 중점으로 작성되어야 한다.
+7. 드라마인 경우 에피소드를 6화까지만 출력한다.
+8. 영화인 경우에는 에피소드를 1로 작성하며 에피소드 화수 또한 1로 작성된다.
+9. 썸네일은 img/video/ 에 epiTitle에 작성된 내용에 .jpg를 추가해서 작성한다.
+10. audioLangID는 audioLang 테이블의 pk이다.
+11. content에 작성했던 내용 중 전체를  대상으로 요구사항 7과 8번을 지키며 출력한다.
+12. content에는 영화 8개 드라마 7개이다. 즉 50개를 출력해야한다.
+
+위 인덱스의 요구사항을 준수한다. 출력은 csv파일 형식으로 저장한다는 것을 인지한다. 출력은 파일형태로 출력한다. 출력 중간에 중단되지 않고 전체 내용을 출력해야 한다.

@@ -1,0 +1,6 @@
+accountID,email,phoneNumber,pw,gender,profilepw,adultverification
+1,johndoe@example.com,010-1234-5678,password123,M,482915,Y
+2,janedoe@example.com,010-2345-6789,securepass456,F,193847,N
+3,mikelee@example.com,010-3456-7890,qwerty789,M,574839,Y
+4,sarahkim@example.com,010-4567-8901,letmein321,F,682740,N
+5,davidpark@example.com,010-5678-9012,passw0rd567,M,395162,Y

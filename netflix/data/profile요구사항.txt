@@ -1,0 +1,24 @@
+CREATE TABLE profile (
+	profileID INT NOT NULL primary key, /* 프로필 ID */
+	nickname VARCHAR2(200) NOT NULL, /* 닉네임 */
+	profileimage VARCHAR2(255), /* 프로필사진 */
+	accessRestriction VARCHAR2(100), /* 접근제한 */
+	accountID INT NOT NULL, /* 계정 ID */
+	subtitleSettingID INT NOT NULL, /* 자막표시 ID */
+	countryID INT NOT NULL, /* 국가 ID */
+    CONSTRAINT FK_account_TO_profile FOREIGN KEY (accountID) REFERENCES account(accountID),
+    CONSTRAINT FK_subtitleSetting_TO_profile FOREIGN KEY (subtitleSettingID) REFERENCES subtitleSetting(subtitleSettingID),
+    CONSTRAINT FK_Country_TO_profile FOREIGN KEY (countryID) REFERENCES Country(countryID)
+);
+위 코드는 넷플릭스에서 사용하는 profile 테이블의 전체 코드이다. 다음 요구사항에 맞춰 더미데이터를 생성한다. 
+
+1. 각 테이블의 컬럼명, 테이블명, 데이터 타입은 수정 없이 동일하게 유지한다.
+2. pk는 시퀀스로 1부터 증가한다.
+3. nickname은 닉네임으로 영어로 의미있는 단어를 랜덤하게 사용한다.
+4. profileimage는 img/ 뒤에는 nickname.jpg 파일로 작성한다.
+5. accessRestriction는 전체관람가, 7+, 12+, 15+, 19+, 청불 이 중 한가지를 랜덤으로 적용한다.
+6. accountID는 이전에 만든 account테이블의 pk를 이용하며 각 accountid당 최소 3개 이상 5개 이하의 profile을 가지도록 생성한다.
+7. subtitleSettingID는 이전에 만든 subtitleSetting 테이블의 pk를 이용한다.
+8. countryID는 이전에 만든 country테이블의 pk이다.
+
+위 인덱스의 요구사항을 준수한다. 출력은 csv파일 형식으로 저장한다는 것을 인지한다. 출력은 파일형태로 출력한다. 출력한다. 

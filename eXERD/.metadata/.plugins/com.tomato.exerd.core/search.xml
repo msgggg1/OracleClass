@@ -2,7 +2,7 @@
 <es:ExerdSearchRequest xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:es="http://exerd.com/search">
   <commonRequest>
     <logicalNameRule expression="ra"/>
-    <physicalNameRule use="true" expression="rating"/>
+    <physicalNameRule use="true" expression="subtitle"/>
     <commentRule expression=""/>
   </commonRequest>
   <tableRequest/>

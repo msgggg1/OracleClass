@@ -1,0 +1,32 @@
+/* 멤버쉽 */
+CREATE TABLE membership (
+	membershipID INT NOT NULL primary key, /* 멤버쉽 ID */
+	price INT NOT NULL, /* 월요금 */
+	resolution VARCHAR2(100) NOT NULL, /* 해상도 */
+	concurrentConnection INT NOT NULL, /* 접속자수 */
+	ad INT NOT NULL, /* 광고여부 */
+	audiotrackid INT NOT NULL, /* 오디오 트랙 ID */
+    CONSTRAINT FK_audioTrack_TO_membership FOREIGN KEY (audiotrackid) REFERENCES audioTrack(audiotrackid)
+);
+
+위 테이블은 넷플릭스에서 사용하는 membership에 대한 테이블이다.
+
+audioTrackID,audioTrackName,audioDescription
+1,Dolby Atmos,몰입형 3D 서라운드 사운드를 제공하는 오디오 트랙입니다.
+2,Dolby Digital 5.1,5.1채널 서라운드 사운드를 지원하는 오디오 트랙입니다.
+3,Stereo 2.0,좌우 2채널 스테레오 사운드를 제공하는 오디오 트랙입니다.
+4,Dolby Digital Plus,향상된 압축 기술로 고품질 오디오를 제공하는 트랙입니다.
+5,Dolby TrueHD,무손실 오디오 코덱을 사용하여 스튜디오 마스터 품질의 사운드를 제공합니다.
+6,AAC 5.1,고급 오디오 코딩을 사용한 5.1채널 서라운드 사운드 트랙입니다.
+7,PCM 2.0,비압축된 스테레오 오디오 트랙으로 원음에 가까운 사운드를 제공합니다.
+8,DTS-HD Master Audio,무손실 압축을 통해 고해상도 오디오를 제공하는 트랙입니다.
+
+아래 내용은 audioTrack테이블에 존재하는 데이터이다.
+
+1. 넷플릭스에 존재하는 멤버쉽에 대한 내용만 가져온다. 총 3개가 될 것이다.
+2. membershipID는 시퀀스로 설정되어 있다. 즉 1부터 순차적으로 증가한다.
+3. 가격 등 멤버쉽에 대한 정보는 한국을 기준으로 작성한다.
+4. 각 컬럼에 대한 내용은 주석에 정의한 내용으로 작성하며 가능한 한글로 작성한다.
+5. audiotrackid는 audioTrack의 외래키로 넷플릭스에서 사용하는 오디오 트랙 혹은 audioTrack테이블에 존재하는 audioDescription의 정보를 기반으로 선택한다.
+
+파일 출력은 csv파일 형식으로 저장할 것이기 때문에 이에 맞춰 출력한다. 해당 테이블에 대한 데이터는 반드시 넷플릭스 한국 서비스에서 사용하는 정보만 사용해야 한다.

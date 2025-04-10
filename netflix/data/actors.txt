@@ -1,0 +1,47 @@
+/* 배우 */
+CREATE TABLE actor (
+	actorid INT NOT NULL primary key, /* 인물 ID */
+	name VARCHAR2(255) NOT NULL, /* 인물 이름 */
+	birthDate DATE NOT NULL /* 생년월일 */
+);
+
+/* 배우들 */
+CREATE TABLE actorList (
+	actorListid INT NOT NULL primary key, /* 배우리스트 ID */
+	role VARCHAR2(255), /* 역할 */
+	roleName VARCHAR2(255), /* 배역명 */
+	contentID INT NOT NULL, /* 콘텐츠 ID */
+	actorid INT NOT NULL, /* 인물 ID */
+    CONSTRAINT FK_content_TO_actorList FOREIGN KEY (contentID) REFERENCES content(contentID),
+    CONSTRAINT FK_actor_TO_actorList FOREIGN KEY (actorid) REFERENCES actor(actorid)
+);
+
+위 테이블은 배우와 배우리스트 테이블이다. 
+
+contentID,contentType,title,originTitle,description,releaseDate,releaseYear,publicDate,runtime,thumbnailURL,mainImage,originLang,productionCountry,registeredAt,updatedAt,availableCountry,videoQuality
+1,영화,기생충,Parasite,가난한 가족과 부유한 가족 사이의 미묘한 관계를 그린 블랙 코미디.,2019-05-30,2019,2019-10-11,132,img/content/sub기생충.jpg,img/content/기생충.jpg,한국어,대한민국,2025-04-09,2025-04-09,대한민국,HD
+2,영화,아이리시맨,The Irishman,한 남자의 시선을 통해 미국 범죄 조직의 역사를 그린 작품.,2019-09-27,2019,2019-11-27,209,img/content/sub아이리시맨.jpg,img/content/아이리시맨.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+3,드라마,기묘한 이야기,Stranger Things,인디애나 주의 작은 마을에서 소년의 실종과 함께 시작되는 미스터리한 사건들.,2016-07-15,2016,2016-07-15,50,img/content/sub기묘한 이야기.jpg,img/content/기묘한 이야기.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+4,드라마,킹덤,Kingdom,조선 시대를 배경으로 한 좀비 스릴러 드라마.,2019-01-25,2019,2019-01-25,45,img/content/sub킹덤.jpg,img/content/킹덤.jpg,한국어,대한민국,2025-04-09,2025-04-09,대한민국,4K
+5,영화,결혼 이야기,Marriage Story,이혼을 앞둔 부부의 감정과 갈등을 그린 드라마.,2019-08-29,2019,2019-12-06,137,img/content/sub결혼 이야기.jpg,img/content/결혼 이야기.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+6,드라마,다크,Dark,독일의 작은 마을에서 시작된 시간 여행과 가족의 비밀을 다룬 드라마.,2017-12-01,2017,2017-12-01,60,img/content/sub다크.jpg,img/content/다크.jpg,독일어,독일,2025-04-09,2025-04-09,독일,HD
+7,영화,로마,Roma,1970년대 멕시코시티의 한 가정의 이야기를 그린 흑백 영화.,2018-08-30,2018,2018-12-14,135,img/content/sub로마.jpg,img/content/로마.jpg,스페인어,멕시코,2025-04-09,2025-04-09,멕시코,4K
+8,드라마,오렌지 이즈 더 뉴 블랙,Orange Is the New Black,여성 교도소에서 벌어지는 다양한 이야기를 그린 드라마.,2013-07-11,2013,2013-07-11,59,img/content/sub오렌지 이즈 더 뉴 블랙.jpg,img/content/오렌지 이즈 더 뉴 블랙.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+9,영화,버드 박스,Bird Box,보이지 않는 존재로부터 살아남기 위한 한 여성의 사투를 그린 스릴러.,2018-11-12,2018,2018-12-21,124,img/content/sub버드 박스.jpg,img/content/버드 박스.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+10,드라마,종이의 집,La Casa de Papel,스페인 조폐국을 점거한 강도들의 이야기를 그린 범죄 드라마.,2017-05-02,2017,2017-05-02,70,img/content/sub종이의 집.jpg,img/content/종이의 집.jpg,스페인어,스페인,2025-04-09,2025-04-09,스페인,HD
+11,영화,익스트랙션,Extraction,납치된 소년을 구하기 위한 용병의 이야기를 그린 액션 영화.,2020-04-24,2020,2020-04-24,117,img/content/sub익스트랙션.jpg,img/content/익스트랙션.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+12,드라마,브리저튼,Bridgerton,19세기 런던 사교계를 배경으로 한 로맨스 드라마.,2020-12-25,2020,2020-12-25,57,img/content/sub브리저튼.jpg,img/content/브리저튼.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+13,영화,트라이얼 오브 더 시카고 7,The Trial of the Chicago 7,1968년 민주당 전당대회 시위를 둘러싼 재판을 그린 드라마.,2020-09-25,2020,2020-10-16,129,img/content/sub트라이얼 오브 더 시카고 7.jpg,img/content/트라이얼 오브 더 시카고 7.jpg,영어,미국,2025-04-09,2025-04-09,미국,HD
+14,드라마,퀸스 갬빗,The Queen's Gambit,체스 신동 소녀의 성장과 성공을 그린 드라마.,2020-10-23,2020,2020-10-23,60,img/content/sub퀸스 갬빗.jpg,img/content/퀸스 갬빗.jpg,영어,미국,2025-04-09,2025-04-09,미국,4K
+15,영화,엔올라 홈즈,Enola Holmes,셜록 홈즈의 여동생 엔올라의 모험을 그린 미스터리 영화.,2020-09-23,2020,2020-09-23,123,img/content/sub엔올라 홈즈.jpg,img/content/엔올라 홈즈.jpg,영어,영국,2025-04-09,2025-04-09,영국,HD
+
+위 데이터는 content테이블에 정의된 데이터들이다.
+
+actor와 actorlist테이블의 데이터를 생성한다.
+
+1. actor와 actorlist는 위에 작성한 content테이블에 정의된 데이터들을 기반으로 작성된다.
+2. 각 콘텐츠데이터에 대해 actorlist에 주연인 배우 한명과 외 한명 총 2명 이상씩 들어가야 하며 actorlist에 존재하는 actor에 대한 데이터가 전부 actor테이블에 존재해야 한다.
+3. 모든 데이터는 넷플릭스 사이트의 정보를 기반으로 작성되어야 한다.
+4. actor테이블의 birthDate 는 해당 배우의 생일을 작성한다.
+
+위 인덱스의 요구사항을 준수한다. 데이터를 출력해야 되는 테이블은 배우와 배우리스트 테이블들이다. 저장은 csv파일 형식으로 저장할 것이며 이는 복사 붙혀넣기를 통해 저장할 것이다.

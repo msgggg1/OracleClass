@@ -1,0 +1,19 @@
+-- 시청 날짜 DEFAULT SYSDATE
+ALTER TABLE viewingHistory
+MODIFY lastViewat DEFAULT SYSDATE;
+-- 결제 날짜 DEFAULT SYSDATE
+ALTER TABLE payment
+MODIFY paydate DEFAULT SYSDATE;
+-- 접속 날짜 DEFAULT SYSDATE
+ALTER TABLE device
+MODIFY connectionTime DEFAULT SYSDATE;
+-- 평가 날짜 DEFAULT SYSDATE
+ALTER TABLE userRating
+MODIFY ratingTime DEFAULT SYSDATE;
+
+
+
+viewingHistory
+payment
+device
+userRating

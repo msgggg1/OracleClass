@@ -1,0 +1,25 @@
+/* 시청기록 */
+CREATE TABLE viewingHistory (
+	viewingHistoryID INT NOT NULL primary key, /* 시청기록 ID */
+	isCompleted CHAR(1) NOT NULL, /* 시청 완료 여부 */
+	lastViewat DATE NOT NULL, /* 시청날짜 */
+	totalViewingTime INT NOT NULL, /* 총 시청 시간(초) */
+	profileID INT NOT NULL, /* 프로필 ID */
+	videoID INT NOT NULL, /* 영상 ID */
+    CONSTRAINT FK_profile_TO_viewingHistory FOREIGN KEY (profileID) REFERENCES profile(profileID),
+    CONSTRAINT FK_video_TO_viewingHistory FOREIGN KEY (videoID) REFERENCES video(videoID)
+);
+
+위 코드는 넷플릭스에서 사용하는 viewingHistory 테이블의 전체 코드이다. 다음 요구사항에 맞춰 더미데이터를 생성한다.
+
+1. 각 테이블의 컬럼명, 테이블명, 데이터 타입은 수정 없이 동일하게 유지한다.
+2. pk는 시퀀스로 1부터 증가한다.
+3. isCompleted는 Y혹은 N이다
+4. lastViewat는 시청 기록이며 DEFAULT값은 SYSDATE이지만 이는 2025년 2월 1일부터 2025년 4월 1일까지 랜덤된 날로 작성한다.
+5. videoID는 video 테이블의 pk이며 이전 작성한 video테이블의 값 중 한개를 선택해서 작성한다.
+6. totalViewingTime는 총 시청 시간으로 video테이블에서 가져온 pk의 epiruntime에서 최소 10분 이상을 뺀 숫자로 작성한다.
+7. profileID는 profile테이블의 pk로 이전에 작성한 profile테이블의 pk 중 한개를 랜덤으로 선택해서 가져온다.
+8. profileID값은 최소 4번 사용되는 값이 3개 이상으로 존재하도록 한다.
+8. 총 30개를 출력한다.
+
+위 인덱스의 요구사항을 준수한다. 출력은 csv파일 형식으로 저장한다는 것을 인지한다. 출력은 파일형태로 출력한다. 출력 중간에 중단되지 않고 전체 내용을 출력해야 한다.

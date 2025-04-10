@@ -1,0 +1,42 @@
+/* 결제방식 */
+CREATE TABLE payment (
+	payid INT NOT NULL primary key, /* 결제id */
+	paydate DATE NOT NULL, /* 결제날짜 */
+	paymethod VARCHAR2(100) NOT NULL, /* 결제수단 */
+	payamount VARCHAR2(100) NOT NULL, /* 결제금액 */
+	useperiod VARCHAR2(200) NOT NULL, /* 기간설명 */
+	membershipID INT NOT NULL, /* 멤버쉽 ID */
+	accountID INT NOT NULL, /* 계정 ID */
+    CONSTRAINT FK_membership_TO_payment FOREIGN KEY (membershipID) REFERENCES membership(membershipID),
+    CONSTRAINT FK_account_TO_payment FOREIGN KEY (accountID) REFERENCES account(accountID)
+);
+
+위 테이블은 넷플릭스에서 사용하는 payment 에 대한 정보를 기반으로 제작한 테이블이다.
+
+accountID,email,phoneNumber,pw,gender,profilepw,adultverification
+1,johndoe@example.com,010-1234-5678,password123,M,482915,Y
+2,janedoe@example.com,010-2345-6789,securepass456,F,193847,N
+3,mikelee@example.com,010-3456-7890,qwerty789,M,574839,Y
+4,sarahkim@example.com,010-4567-8901,letmein321,F,682740,N
+5,davidpark@example.com,010-5678-9012,passw0rd567,M,395162,Y
+
+위 데이터는 account 테이블에 존재하는 데이터 이다.
+
+membershipID,price,resolution,concurrentConnection,ad,audiotrackid
+1,5500,1080p,2,1,2
+2,13500,1080p,2,0,2
+3,17000,4K,4,0,1
+
+위 데이터는 membership 테이블에 존재하는 데이터이다.
+
+아래 요구사항을 준사하여 결제방식 테이블에 데이터를 생성한다.
+1. payid는 시퀀스로 설정되어 1부터 순차적으로 증가한다.
+2. paydate는 원래 디폴트 값이 sysdate로 설정되어 있다. 하지만 지금은 2025년 2월 1일부터 2025년 4월 10일까지 랜덤하게 작성하며 2025년 3월 20일 이후 데이터가 최소 3개는 필요하다.
+3. paymethod 결제 수단으로 넷플릭스 사이트에서 사용 가능한 결제 수단 중 한개를 사용한다.
+4. membershipID는 membership 테이블에 존재하는 데이터 중 한개를 선택한다.
+5. accountID는 account 테이블에 존재하는 데이터 중 한 개를 선택한다.
+6. payamount는 결제 금액으로 membershipID로 설정한 값을 기반으로 하여 membership 테이블에 존재하는 price를 기반으로 작성한다.
+7. useperiod는 paydate를 기반으로 한 달동안 해당 membership의 사용이 가능하기 때문에 membership 사용이 끝나는 날짜를 기반으로 작성한다.
+8. paydate와 useperiod, accountID는 긴밀한 연관성이 있다. 3월 20일 이후 데이터는 5개 까지 존재 가능하며 paydate와 useperiod는 반드시 한달 간격으로 작성되어야 하고 해당 기간동안에 accountID는 한개의 목록만 가질 수 있다. 
+
+파일 출력은 csv파일 형식으로 저장할 것이기 때문에 이에 맞춰 출력한다. 해당 테이블에 대한 데이터는 반드시 넷플릭스 한국 서비스에서 사용하는 정보만 사용해야 한다.

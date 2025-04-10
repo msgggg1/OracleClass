@@ -1,0 +1,17 @@
+/* 오디오 트랙 */
+CREATE TABLE audioTrack (
+	audioTrackID INT NOT NULL primary key, /* 오디오 트랙 ID */
+	audioTrackName varchar(50) not null, /*오디오 트랙 명*/
+    audioDescription VARCHAR2(255) /* 오디오 설명 */
+);
+
+위 코드는 넷플릭스에서 사용하는 audioTrack 테이블의 전체 코드이다. 다음 요구사항에 맞춰 더미데이터를 생성한다. 
+
+1. 각 테이블의 컬럼명, 테이블명, 데이터 타입은 수정 없이 동일하게 유지한다.
+2. pk는 시퀀스로 1부터 증가한다.
+3. 넷플릭스에서 사용하는 오디오 트랙을 가져와서 정의한다.
+4. 각 주석의 설명에 따라 존재하는 데이터를 사용한다.
+5. 오디오 트랙은 Dolby Atmos, Stereo 등과 같은 내용을 의미한다.
+6. 8개의 컬럼을 출력한다.
+
+위 인덱스의 요구사항을 준수한다. 출력은 csv파일 형식으로 저장한다는 것을 인지한다. 출력은 파일형태로 출력한다. 출력한다. 
