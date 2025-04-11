@@ -49,3 +49,67 @@ videoID,seasonNum,epiNum,epiTitle,epiDescription,epiruntime,epiImageURL,releaseD
 48,1,5,과거의 상처와 가족의 비밀,켄터키로 돌아온 베스는 미국 챔피언십을 앞두고 자신의 게임을 향상시키기 위해 이전의 상대와 재회한다.,60,img/video/과거의 상처와 가족의 비밀.jpg,2020-11-20,14,2
 49,1,6,최종 대회를 향한 준비와 결단,베스는 뉴욕에서 베니와 훈련한 후 보르고프와의 재경기를 위해 파리로 향한다. 하지만 한밤의 소동이 그녀를 위험에 빠뜨린다.,60,img/video/최종 대회를 향한 준비와 결단.jpg,2020-11-27,14,2
 50,1,1,셜록 홈즈의 여동생 엔올라의 모험을 그린 미스터리 영화,어머니의 실종을 조사하던 엔올라 홈즈는 그녀의 탐정 기술을 사용하여 오빠 셜록을 능가하고 가출한 귀족을 돕는다.,123,img/video/셜록 홈즈의 여동생 엔올라의 모험을 그린 미스터리 영화.jpg,2020-09-23,15,2
+51,1,1,Society of the Snow,1972년 안데스 비행기 사고 생존자들의 72일간의 생존 투쟁을 그린 영화.,144,img/video/Society of the Snow.jpg,2024-01-04,16,2
+52,1,1,Good Grief,"단 레비가 감독하고 출연한 코미디 영화로, 상실과 자기 발견을 다룸.",100,img/video/Good Grief.jpg,2024-01-05,17,1
+53,1,1,Lift,"케빈 하트 주연의 하이스트 코미디로, 비행기 안에서 불가능한 강도를 실행.",103,img/video/Lift.jpg,2024-01-11,18,1
+54,1,1,Damsel,"밀리 바비 브라운 주연의 판타지 액션 영화로, 왕자와의 결혼 후 희생 제물로 선택됨.",113,img/video/Damsel.jpg,2024-03-08,19,1
+55,1,1,Atlas,"제니퍼 로페즈 주연의 SF 영화로, 미스터리한 오브젝트를 포획하기 위한 임무를 다룸.",126,img/video/Atlas.jpg,2024-05-24,20,1
+56,1,1,Episode 1,아앙이 남부 물의 부족에서 깨어나 카타라와 소카를 만나다.,60,img/video/Episode 1.jpg,2024-02-22,21,1
+57,1,2,Episode 2,"아앙이 자신의 아바타 정체성을 받아들이고, 친구들과 함께 바람의 사원을 방문하다.",60,img/video/Episode 2.jpg,2024-02-22,21,1
+58,1,3,Episode 3,아앙과 친구들이 지구 왕국을 여행하며 새로운 동맹을 형성하다.,60,img/video/Episode 3.jpg,2024-02-22,21,1
+59,1,4,Episode 4,아앙이 불의 제국에 맞서기 위해 불의 주술을 배우다.,60,img/video/Episode 4.jpg,2024-02-22,21,1
+60,1,5,Episode 5,아앙과 팀 아바타가 북부 물의 부족을 방문하여 지원을 요청하다.,60,img/video/Episode 5.jpg,2024-02-22,21,1
+61,1,6,Episode 6,"결전의 날, 아앙이 불의 제왕과 최후의 대결을 벌이다.",60,img/video/Episode 6.jpg,2024-02-22,21,1
+62,3,1,Episode 1,페넬로페와 콜린의 관계가 새로운 국면을 맞이하다.,65,img/video/Episode 1.jpg,2024-05-16,22,1
+63,3,2,Episode 2,브리저튼 가문의 새로운 스캔들이 런던 사교계를 뒤흔든다.,65,img/video/Episode 2.jpg,2024-05-16,22,1
+64,3,3,Episode 3,엘로이즈가 페넬로페와의 우정을 시험하는 선택을 하다.,65,img/video/Episode 3.jpg,2024-05-16,22,1
+65,3,4,Episode 4,안소니와 케이트의 결혼 생활에 예상치 못한 도전이 닥치다.,65,img/video/Episode 4.jpg,2024-05-16,22,1
+66,3,5,Episode 5,새로운 인물이 브리저튼 가문의 일원들에게 관심을 보이다.,65,img/video/Episode 5.jpg,2024-05-16,22,1
+67,3,6,Episode 6,시즌 피날레에서 사랑과 비밀이 폭로되며 모든 것이 변화한다.,65,img/video/Episode 6.jpg,2024-05-16,22,1
+68,1,1,Episode 1,에마와 덱스터가 대학 졸업 후 처음으로 만나는 날.,60,img/video/Episode 1.jpg,2024-02-08,23,1
+69,1,2,Episode 2,두 사람이 각자의 삶을 살아가며 우정을 이어가는 과정.,60,img/video/Episode 2.jpg,2024-02-08,23,1
+70,1,3,Episode 3,"에마가 작가로서의 꿈을 추구하고, 덱스터는 방송인으로 성공하다.",60,img/video/Episode 3.jpg,2024-02-08,23,1
+71,1,4,Episode 4,삶의 굴곡 속에서 두 사람의 관계에 변화가 찾아오다.,60,img/video/Episode 4.jpg,2024-02-08,23,1
+72,1,5,Episode 5,에마와 덱스터가 서로에 대한 감정을 재확인하다.,60,img/video/Episode 5.jpg,2024-02-08,23,1
+73,1,6,Episode 6,운명적인 사건이 두 사람의 미래를 결정짓다.,60,img/video/Episode 6.jpg,2024-02-08,23,1
+74,1,1,Episode 1,톰 리플리가 부유한 남자의 의뢰를 받아 이탈리아로 향하다.,60,img/video/Episode 1.jpg,2024-04-04,24,1
+75,1,2,Episode 2,리플리가 딕키 그린리프와 친분을 쌓으며 그의 삶에 스며들다.,60,img/video/Episode 2.jpg,2024-04-04,24,1
+76,1,3,Episode 3,거짓말과 기만으로 가득 찬 리플리의 행동이 위험을 초래하다.,60,img/video/Episode 3.jpg,2024-04-04,24,1
+77,1,4,Episode 4,리플리가 자신의 정체를 숨기기 위해 극단적인 선택을 하다.,60,img/video/Episode 4.jpg,2024-04-04,24,1
+78,1,5,Episode 5,수사망이 좁혀오며 리플리는 점점 더 궁지에 몰리다.,60,img/video/Episode 5.jpg,2024-04-04,24,1
+79,1,6,Episode 6,리플리의 운명이 결정되는 충격적인 결말.,60,img/video/Episode 6.jpg,2024-04-04,24,1
+80,2,1,Episode 1,생존자들의 귀환.,60,img/video/Episode 1.jpg,2024-12-26,25,6
+81,2,2,Episode 2,새로운 게임의 서막.,60,img/video/Episode 2.jpg,2024-12-26,25,6
+82,2,3,Episode 3,배신과 연대.,60,img/video/Episode 3.jpg,2024-12-26,25,6
+83,2,4,Episode 4,가면 속 진실.,60,img/video/Episode 4.jpg,2024-12-26,25,6
+84,2,5,Episode 5,희생의 의미.,60,img/video/Episode 5.jpg,2024-12-26,25,6
+85,2,6,Episode 6,마지막 선택.,60,img/video/Episode 6.jpg,2024-12-26,25,6
+86,1,1,Wallace & Gromit: Vengeance Most Fowl,Wallace와 Gromit이 구운 닭과 맞서는 모험을 그린 애니메이션 영화.,95,img/video/Wallace & Gromit: Vengeance Most Fowl.jpg,2025-01-03,26,1
+87,1,1,Ad Vitam,Ad Vitam은 불사의 기술이 보편화된 미래 사회에서 벌어지는 미스터리 범죄 이야기다.,120,img/video/Ad Vitam.jpg,2025-01-10,27,3
+88,1,1,The Roshans,The Roshans는 인도 영화계의 로샨 가족의 영화적 유산을 다룬 다큐멘터리다.,90,img/video/The Roshans.jpg,2025-01-17,28,12
+89,1,1,The Sand Castle,The Sand Castle은 사막의 유적을 배경으로 한 미스터리 어드벤처 영화다.,110,img/video/The Sand Castle.jpg,2025-01-24,29,1
+90,1,1,The Addams Family,괴짜 가족의 기묘하고 유쾌한 일상을 담은 애니메이션 영화.,100,img/video/The Addams Family.jpg,2025-04-09,30,1
+91,1,1,The Pods Are Open,"The pods are open! Thirty hopeful German singles begin their journey,  and several hit it off. One couple is quick to take a big leap of faith.",55,img/video/The Pods Are Open.jpg,2025-01-03,32,4
+92,1,2,Three Is One Too Many,"While some rapidly grow deep connections,  others worry that the person sitting on the other side of the wall isn't ready for commitment.",57,img/video/Three Is One Too Many.jpg,2025-01-03,32,4
+93,1,3,All on One Card,Tensions run high in both singles' quarters as two participants search their hearts for who they really love. Another couple puts a ring on it.,56,img/video/All on One Card.jpg,2025-01-03,32,4
+94,1,4,Trouble in Paradise,"The engaged couples go to Crete for a magical honeymoon. Emotional connections are made physical,  but some participants are already having doubts.",43,img/video/Trouble in Paradise.jpg,2025-01-03,32,4
+95,1,5,Decidedly Undecided,"Communication is key! Several couples struggle to build deeper intimacy,  and others need to establish trust. One participant delivers a shocking message.",42,img/video/Decidedly Undecided.jpg,2025-01-10,32,4
+96,1,6,The Second Chance,"The honeymoon is over. As the couples settle into cohabitation,  several surprising twists alter the dynamic before a big party.",44,img/video/The Second Chance.jpg,2025-01-10,32,4
+97,1,7,Meet My Family,"One couple turns over a new leaf,  while another is stuck in negative patterns. Things get serious when the participants try on wedding outfits.",44,img/video/Meet My Family.jpg,2025-01-10,32,4
+98,1,8,Cold Feet,"The weddings are approaching fast,  creating excitement ? and anxiety. Emotions take over when some do not feel ready for the altar.",44,img/video/Cold Feet.jpg,2025-01-10,32,4
+99,1,9,Anything Can Happen at the Altar,The big day has arrived! The couples meet at the altar for the final test of their emotional connection. Is love truly blind?,46,img/video/Anything Can Happen at the Altar.jpg,2025-01-17,32,4
+100,1,10,The Reunion,"From the pods to their current relationship status,  the participants come together to revisit their experiences in this reunion special.",65,img/video/The Reunion.jpg,2025-01-19,32,4
+101,1,1,A Living Legend,"Alucard seeks help from Richter and his friends in the wake of a devastating loss. Elsewhere,  Erzsebet makes plans to conquer Paris.",32,img/video/A Living Legend.jpg,2025-01-16,34,1
+102,1,2,Angel of Death,"Drolta's dark past unfolds as Alucard,  Annette and Richter set out in search of Sekhmet's missing soul. Maria encounters her mother in her new form.",28,img/video/Angel of Death.jpg,2025-01-16,34,1
+103,1,3,The Widow's Window,"As Maria's magic intensifies,  Mizrak urges the Abbot to repent and reverse his loyalties. Alucard's party arrives in Paris at the height of revolution.",28,img/video/The Widow's Window.jpg,2025-01-16,34,1
+104,1,4,Monstrous Things,"Annette,  Richter and Alucard seek Sekhmet's mummy at the Louvre,  where spirits seem to be lighting the way. Juste intervenes in a deadly confrontation.",29,img/video/Monstrous Things.jpg,2025-01-16,34,1
+105,1,5,Into the Abyss,Maria confronts her dark side as Annette and Richter follow orders to find and destroy the city's undead. Olrox considers his fate in the fight ahead.,30,img/video/Into the Abyss.jpg,2025-01-16,34,1
+106,1,6,Ancestors,Annette embarks on a perilous journey into the spirit world that sparks a shocking transformation ? and sets the stage for an epic showdown.,28,img/video/Ancestors.jpg,2025-01-16,34,1
+107,1,7,Grenadye Alaso,"Chaos erupts under a blood-red sky as the battle for Paris begins,  with Alucard's allies on one side and Erzsebet's army on the other.",30,img/video/Grenadye Alaso.jpg,2025-01-16,34,1
+108,1,8,A Line of Great Heroes,"With the future at stake,  Richter and friends join forces against a terrifying new evil that puts their powers ? and the Belmont legacy ? to the test.",33,img/video/A Line of Great Heroes.jpg,2025-01-16,34,1
+109,1,1,Episode 1,"Set in 1857 during the Utah War,  the series examines the fight to gain control of the American West and the violent clash between the LDS Church and cultures in the Utah Territory,  centering on the events surrounding the Mountain Meadows Massacre.",60,img/video/Episode 1.jpg,2025-01-09,33,1
+110,1,2,Episode 2,"Continuing the harrowing journey,  characters face increasing tensions and survival challenges amidst the backdrop of the American frontier.",60,img/video/Episode 2.jpg,2025-01-09,33,1
+111,1,3,Episode 3,"As alliances form and betrayals surface,  the struggle for power and control intensifies in the unforgiving landscape.",60,img/video/Episode 3.jpg,2025-01-09,33,1
+112,1,4,Episode 4,"Personal vendettas and cultural clashes reach a boiling point,  leading to unforeseen consequences for all involved.",60,img/video/Episode 4.jpg,2025-01-09,33,1
+113,1,5,Episode 5,"The harsh realities of frontier life take their toll,  as characters are forced to confront their own morals and survival instincts.",60,img/video/Episode 5.jpg,2025-01-09,33,1
+114,1,6,Episode 6,"In the climactic conclusion,  destinies are determined and the true cost of conquest is revealed.",60,img/video/Episode 6.jpg,2025-01-09,33,1

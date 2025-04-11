@@ -1,0 +1,133 @@
+-- actor 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_actor_seq
+BEFORE INSERT ON actor
+FOR EACH ROW
+BEGIN
+  SELECT actorID.NEXTVAL
+  INTO :NEW.actorID
+  FROM dual;
+END;
+
+-- actorList 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_actorList_seq
+BEFORE INSERT ON actorList
+FOR EACH ROW
+BEGIN
+  SELECT actorListID.NEXTVAL
+  INTO :NEW.actorListID
+  FROM dual;
+END;
+
+-- audioTrack 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_audioTrack_seq
+BEFORE INSERT ON audioTrack
+FOR EACH ROW
+BEGIN
+  SELECT audioTrackID.NEXTVAL
+  INTO :NEW.audioTrackID
+  FROM dual;
+END;
+
+-- trailer 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_trailer_seq
+BEFORE INSERT ON trailer
+FOR EACH ROW
+BEGIN
+  SELECT trailerID.NEXTVAL
+  INTO :NEW.trailerID
+  FROM dual;
+END;
+
+-- userRating 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_userRating_seq
+BEFORE INSERT ON userRating
+FOR EACH ROW
+BEGIN
+  SELECT userRatingID.NEXTVAL
+  INTO :NEW.userRatingID
+  FROM dual;
+END;
+
+-- feature 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_feature_seq
+BEFORE INSERT ON feature
+FOR EACH ROW
+BEGIN
+  SELECT featureID.NEXTVAL
+  INTO :NEW.featureID
+  FROM dual;
+END;
+
+-- Country 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_Country_seq
+BEFORE INSERT ON Country
+FOR EACH ROW
+BEGIN
+  SELECT countryID.NEXTVAL
+  INTO :NEW.countryID
+  FROM dual;
+END;
+
+-- contentRating 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_contentRating_seq
+BEFORE INSERT ON contentRating
+FOR EACH ROW
+BEGIN
+  SELECT contentRatingID.NEXTVAL
+  INTO :NEW.contentRatingID
+  FROM dual;
+END;
+
+-- creator 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_creator_seq
+BEFORE INSERT ON creator
+FOR EACH ROW
+BEGIN
+  SELECT creatorID.NEXTVAL
+  INTO :NEW.creatorID
+  FROM dual;
+END;
+
+
+-- subtitle 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_subtitle_seq
+BEFORE INSERT ON subtitle
+FOR EACH ROW
+BEGIN
+  SELECT subtitleID.NEXTVAL
+  INTO :NEW.subtitleID
+  FROM dual;
+END;
+
+-- creatorList 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_creatorList_seq
+BEFORE INSERT ON creatorList
+FOR EACH ROW
+BEGIN
+  SELECT creatorListID.NEXTVAL
+  INTO :NEW.creatorListID
+  FROM dual;
+END;
+
+-- featureList 테이블용 시퀀스 트리거
+CREATE OR REPLACE TRIGGER trg_featureList_seq
+BEFORE INSERT ON featureList
+FOR EACH ROW
+BEGIN
+  SELECT featureListID.NEXTVAL
+  INTO :NEW.featureListID
+  FROM dual;
+END;
+
+
+-- audioLang 테이블 시퀀스용 트리거
+CREATE OR REPLACE TRIGGER trg_audioLang_seq
+BEFORE INSERT ON audioLang
+FOR EACH ROW
+BEGIN
+  SELECT audioLangID.NEXTVAL
+  INTO :NEW.audioLangID
+  FROM dual;
+END;
+
+

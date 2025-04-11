@@ -97,7 +97,7 @@ END;
 /
 
 --------------------------------------------------------------------------------
--- 2. 인기순 TOP 10 출력
+--2. 인기순 TOP 10 출력
 CREATE OR REPLACE PROCEDURE sp_show_popular_cat_content (
     p_profile_id IN profile.profileID%TYPE
 )
@@ -188,7 +188,6 @@ END;
      sp_show_popular_cat_content(p_profile_id => &profile_id); -- 프로시저 이름은 유지
  END;
  /
-
 
 --------------------------------------------------------------------------------
 -- 3. 신작/구작 인기순 (신/구작 기준: 1년)
@@ -312,172 +311,6 @@ END;
 /
 
 
---------------------------------------------------------------------------------
--- 4. 찜목록 추가하기
--- 1. 출력 설정
-SET SERVEROUTPUT ON;
-
--- 2. 시퀀스 재생성
-DECLARE
-  v_max_id NUMBER;
-BEGIN
-  SELECT NVL(MAX(wishlistID), 0) + 1 INTO v_max_id FROM wishList;
-
-  BEGIN
-    EXECUTE IMMEDIATE 'DROP SEQUENCE wishlist_seq';
-  EXCEPTION
-    WHEN OTHERS THEN
-      IF SQLCODE != -2289 THEN
-        RAISE;
-      END IF;
-  END;
-
-  EXECUTE IMMEDIATE 'CREATE SEQUENCE wishlist_seq START WITH ' || v_max_id || ' INCREMENT BY 1 NOCACHE';
-  DBMS_OUTPUT.PUT_LINE('시퀀스 재생성 완료. 시작값: ' || v_max_id);
-END;
-/
-
--- 3. UNIQUE 제약조건 생성 (중복 방지용)
-BEGIN
-  EXECUTE IMMEDIATE '
-    ALTER TABLE wishList ADD CONSTRAINT uq_profile_video UNIQUE (profileID, videoID)
-  ';
-EXCEPTION
-  WHEN OTHERS THEN
-    IF SQLCODE != -2261 THEN
-      RAISE;
-    END IF;
-END;
-/
-
--- 4. 사용자 입력
-ACCEPT input_profile_id NUMBER PROMPT 'PROFILE ID 입력: '
-ACCEPT input_video_id NUMBER PROMPT 'VIDEO ID 입력: '
-
--- 5. INSERT 실행 (중복 시 예외 처리)
-DECLARE
-  v_profile_id INT := &input_profile_id;
-  v_video_id   INT := &input_video_id;
-
-BEGIN
-  INSERT INTO wishList (wishlistID, profileID, videoID)
-  VALUES (wishlist_seq.NEXTVAL, v_profile_id, v_video_id);
-
-  DBMS_OUTPUT.PUT_LINE('찜하기 완료: PROFILE ' || v_profile_id || ', VIDEO ' || v_video_id);
-
-EXCEPTION
-  WHEN DUP_VAL_ON_INDEX THEN
-    DBMS_OUTPUT.PUT_LINE('이미 찜한 콘텐츠입니다. PROFILE ' || v_profile_id || ', VIDEO ' || v_video_id);
-
-  WHEN OTHERS THEN
-    DBMS_OUTPUT.PUT_LINE('예외 발생: ' || SQLCODE || ' - ' || SQLERRM);
-    RAISE;
-END;
-/
-
--- 6. 입력 변수 해제
-UNDEFINE input_profile_id
-UNDEFINE input_video_id
-
---------------------------------------------------------------------------------
-
--- 5. 시청기록 업데이트
--- 1. 출력 설정
-SET SERVEROUTPUT ON;
-
--- 2. 시퀀스 초기화
-DECLARE
-  v_max_id NUMBER;
-BEGIN
-  SELECT NVL(MAX(viewingHistoryID), 0) + 1 INTO v_max_id FROM viewingHistory;
-
-  BEGIN
-    EXECUTE IMMEDIATE 'DROP SEQUENCE viewingHistory_seq';
-  EXCEPTION
-    WHEN OTHERS THEN
-      IF SQLCODE != -2289 THEN RAISE; END IF;
-  END;
-
-  EXECUTE IMMEDIATE 'CREATE SEQUENCE viewingHistory_seq START WITH ' || v_max_id || ' INCREMENT BY 1 NOCACHE';
-  DBMS_OUTPUT.PUT_LINE('시퀀스 재생성 완료');
-END;
-/
-
--- 3. 입력 받기
-ACCEPT input_profile_id NUMBER PROMPT ' PROFILE ID 입력: '
-ACCEPT input_video_id NUMBER PROMPT ' VIDEO ID 입력: '
-ACCEPT input_is_completed CHAR PROMPT ' 시청 완료 여부 입력 (Y/N) [엔터 시 랜덤]: '
-ACCEPT input_last_view_at CHAR PROMPT ' 마지막 시청일 입력 (예: 25/04/11) [엔터 시 오늘 날짜]: '
-ACCEPT input_total_time CHAR PROMPT ' 총 시청 시간(초) 입력 [엔터 시 랜덤 600~7200]: '
-
--- 4. MERGE 수행
-DECLARE
-  v_profile_id INT := &input_profile_id;
-  v_video_id INT := &input_video_id;
-
-  v_is_completed CHAR(1);
-  v_last_view_at DATE;
-  v_total_time INT;
-
-BEGIN
-  -- 랜덤 또는 수동 시청 완료 여부
-  IF TRIM('&&input_is_completed') IS NULL THEN
-    v_is_completed := CASE MOD(DBMS_RANDOM.VALUE(1, 3), 2) WHEN 0 THEN 'Y' ELSE 'N' END;
-  ELSE
-    v_is_completed := UPPER(SUBSTR(TRIM('&&input_is_completed'), 1, 1));
-  END IF;
-
-  -- 시청일 처리
-  IF TRIM('&&input_last_view_at') IS NULL THEN
-    v_last_view_at := SYSDATE;
-  ELSE
-    v_last_view_at := TO_DATE('&&input_last_view_at', 'RR/MM/DD');
-  END IF;
-
-  -- 총 시청 시간 처리 (핵심 수정 부분!)
-  IF TRIM('&&input_total_time') IS NULL THEN
-    v_total_time := TRUNC(DBMS_RANDOM.VALUE(600, 7200));
-  ELSE
-    v_total_time := TO_NUMBER(TRIM('&&input_total_time'));
-  END IF;
-
-  -- MERGE: UPDATE or INSERT
-  MERGE INTO viewingHistory target
-  USING (
-    SELECT v_profile_id AS profileID, v_video_id AS videoID FROM dual
-  ) source
-  ON (
-    target.profileID = source.profileID AND target.videoID = source.videoID
-  )
-  WHEN MATCHED THEN
-    UPDATE SET 
-      isCompleted = v_is_completed,
-      lastViewat = v_last_view_at,
-      totalViewingTime = v_total_time
-  WHEN NOT MATCHED THEN
-    INSERT (
-      viewingHistoryID, isCompleted, lastViewat, totalViewingTime, profileID, videoID
-    ) VALUES (
-      viewingHistory_seq.NEXTVAL, v_is_completed, v_last_view_at, v_total_time, v_profile_id, v_video_id
-    );
-
-  DBMS_OUTPUT.PUT_LINE('시청 기록 삽입 또는 업데이트 완료!');
-  DBMS_OUTPUT.PUT_LINE('완료여부: ' || v_is_completed || ', 날짜: ' || TO_CHAR(v_last_view_at, 'YYYY/MM/DD') || ', 시간(초): ' || v_total_time);
-
-EXCEPTION
-  WHEN OTHERS THEN
-    DBMS_OUTPUT.PUT_LINE('예외 발생: ' || SQLCODE || ' - ' || SQLERRM);
-    RAISE;
-END;
-/
-
--- 5. 변수 해제
-UNDEFINE input_profile_id
-UNDEFINE input_video_id
-UNDEFINE input_is_completed
-UNDEFINE input_last_view_at
-UNDEFINE input_total_time
-
 
 --------------------------------------------------------------------------------
 -- 뷰 생성
@@ -489,34 +322,59 @@ SELECT
 FROM
     content;
 /
---------------------------------------------------------------------------------
--- 6. [탐색] 자막유무/언어/정렬(오름차순,내림차순,신작순,추천순)
--- 추천순 : 사용자 선호도 반영
+
+-- 4. [언어별 찾아보기] 언어/자막/정렬/프로필ID(& 변수)로 필터링 + 선택적 정렬
 DECLARE
-    -- 입력 변수
+    -- 입력 변수 (프로필 ID 먼저)
     v_profile_id      profile.profileID%TYPE := &profile_id;
     v_sub_req         CHAR(1)                := UPPER('&req_sub');
-    v_language        audioLang.Language%TYPE := '&req_lang';
+    v_language        content.originLang%TYPE := '&req_lang'; -- 타입을 content.originLang으로 변경
     v_sort_option     VARCHAR2(20)           := UPPER('&req_sort');
 
-    -- 각 정렬 방식에 대한 커서 선언
+    -- === 각 정렬 방식별 정적 커서 선언 (WHERE 절 수정됨) ===
     CURSOR title_asc_cursor IS
-        SELECT cbi.title, cbi.thumbnailURL FROM vw_content_basic_info cbi
-        WHERE EXISTS (SELECT 1 FROM video v JOIN audioLang al ON v.audioLangID = al.audioLangID WHERE v.contentID = cbi.contentID AND al.Language = v_language AND (v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM subtitle s WHERE s.videoID = v.videoID)))) ORDER BY cbi.title ASC;
+        SELECT cbi.title, cbi.thumbnailURL
+        FROM vw_content_basic_info cbi
+        JOIN content c ON cbi.contentID = c.contentID -- originLang 접근 위해 조인
+        WHERE c.originLang = v_language -- 1. 원어 필터
+          AND ( -- 2. 자막 필터
+                v_sub_req = 'N'
+                OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM video v JOIN subtitle s ON v.videoID = s.videoID WHERE v.contentID = cbi.contentID))
+              )
+        ORDER BY cbi.title ASC;
 
     CURSOR title_desc_cursor IS
-        SELECT cbi.title, cbi.thumbnailURL FROM vw_content_basic_info cbi
-        WHERE EXISTS (SELECT 1 FROM video v JOIN audioLang al ON v.audioLangID = al.audioLangID WHERE v.contentID = cbi.contentID AND al.Language = v_language AND (v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM subtitle s WHERE s.videoID = v.videoID)))) ORDER BY cbi.title DESC;
+        SELECT cbi.title, cbi.thumbnailURL
+        FROM vw_content_basic_info cbi
+        JOIN content c ON cbi.contentID = c.contentID
+        WHERE c.originLang = v_language
+          AND ( v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM video v JOIN subtitle s ON v.videoID = s.videoID WHERE v.contentID = cbi.contentID)))
+        ORDER BY cbi.title DESC;
 
     CURSOR release_date_cursor IS
-        SELECT cbi.title, cbi.thumbnailURL FROM vw_content_basic_info cbi JOIN content c ON cbi.contentID = c.contentID
-        WHERE EXISTS (SELECT 1 FROM video v JOIN audioLang al ON v.audioLangID = al.audioLangID WHERE v.contentID = cbi.contentID AND al.Language = v_language AND (v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM subtitle s WHERE s.videoID = v.videoID)))) ORDER BY c.releaseDate DESC, cbi.title ASC;
+        SELECT cbi.title, cbi.thumbnailURL
+        FROM vw_content_basic_info cbi
+        JOIN content c ON cbi.contentID = c.contentID -- releaseDate, originLang 접근 위해 조인
+        WHERE c.originLang = v_language
+          AND ( v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM video v JOIN subtitle s ON v.videoID = s.videoID WHERE v.contentID = cbi.contentID)))
+        ORDER BY c.releaseDate DESC, cbi.title ASC;
 
     CURSOR recommendation_cursor IS
-        WITH ProfileGenrePrefs AS (SELECT genreID, cnt FROM genreViewCnt WHERE profileID = v_profile_id AND cnt > 0), ProfileFeaturePrefs AS (SELECT featureID, cnt FROM featureViewCnt WHERE profileID = v_profile_id AND cnt > 0), ContentGenreScores AS (SELECT gl.contentID, SUM(NVL(pgp.cnt, 0)) as total_genre_score FROM genreList gl LEFT JOIN ProfileGenrePrefs pgp ON gl.genreID = pgp.genreID GROUP BY gl.contentID), ContentFeatureScores AS (SELECT fl.contentID, SUM(NVL(pfp.cnt, 0)) as total_feature_score FROM featureList fl LEFT JOIN ProfileFeaturePrefs pfp ON fl.featureID = pfp.featureID GROUP BY fl.contentID)
+        WITH ProfileGenrePrefs AS (SELECT genreID, cnt FROM genreViewCnt WHERE profileID = v_profile_id AND cnt > 0),
+             ProfileFeaturePrefs AS (SELECT featureID, cnt FROM featureViewCnt WHERE profileID = v_profile_id AND cnt > 0),
+             ContentGenreScores AS (SELECT gl.contentID, SUM(NVL(pgp.cnt, 0)) as total_genre_score FROM genreList gl LEFT JOIN ProfileGenrePrefs pgp ON gl.genreID = pgp.genreID GROUP BY gl.contentID),
+             ContentFeatureScores AS (SELECT fl.contentID, SUM(NVL(pfp.cnt, 0)) as total_feature_score FROM featureList fl LEFT JOIN ProfileFeaturePrefs pfp ON fl.featureID = pfp.featureID GROUP BY fl.contentID)
         SELECT cbi.title, cbi.thumbnailURL, (NVL(cgs.total_genre_score, 0) + NVL(cfs.total_feature_score, 0)) AS final_score
-        FROM vw_content_basic_info cbi LEFT JOIN ContentGenreScores cgs ON cbi.contentID = cgs.contentID LEFT JOIN ContentFeatureScores cfs ON cbi.contentID = cfs.contentID
-        WHERE EXISTS (SELECT 1 FROM video v JOIN audioLang al ON v.audioLangID = al.audioLangID WHERE v.contentID = cbi.contentID AND al.Language = v_language AND (v_sub_req = 'N' OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM subtitle s WHERE s.videoID = v.videoID)))) ORDER BY final_score DESC NULLS LAST, cbi.title ASC;
+        FROM vw_content_basic_info cbi
+        JOIN content c ON cbi.contentID = c.contentID -- originLang 접근 위해 조인
+        LEFT JOIN ContentGenreScores cgs ON cbi.contentID = cgs.contentID
+        LEFT JOIN ContentFeatureScores cfs ON cbi.contentID = cfs.contentID
+        WHERE c.originLang = v_language -- 1. 원어 필터
+          AND ( -- 2. 자막 필터
+                v_sub_req = 'N'
+                OR (v_sub_req = 'Y' AND EXISTS (SELECT 1 FROM video v JOIN subtitle s ON v.videoID = s.videoID WHERE v.contentID = cbi.contentID))
+              )
+        ORDER BY final_score DESC NULLS LAST, cbi.title ASC;
 
     -- 루프 및 출력용 변수
     v_title         vw_content_basic_info.title%TYPE;
@@ -528,39 +386,28 @@ DECLARE
 BEGIN
     -- 입력값 유효성 검사
     IF v_sub_req NOT IN ('Y', 'N') THEN DBMS_OUTPUT.PUT_LINE('오류: 자막 필요 여부는 Y 또는 N 으로만 입력해야 합니다.'); RETURN; END IF;
-    IF v_sort_option NOT IN ('TITLE_ASC', 'TITLE_DESC', 'RELEASE_DATE', 'RECOMMEND') THEN DBMS_OUTPUT.PUT_LINE('오류: 유효하지 않은 정렬 기준입니다. (TITLE_ASC, TITLE_DESC, RELEASE_DATE, RECOMMEND)'); RETURN; END IF;
+    IF v_sort_option NOT IN ('TITLE_ASC', 'TITLE_DESC', 'RELEASE_DATE', 'RECOMMEND') THEN DBMS_OUTPUT.PUT_LINE('오류: 유효하지 않은 정렬 기준입니다.'); RETURN; END IF;
+    -- 언어 입력값 자체는 여기서 검증하기 어려움 (테이블에 존재하는지 등)
 
     -- 프로필 닉네임 조회
     BEGIN SELECT nickname INTO v_profile_nickname FROM profile WHERE profileID = v_profile_id; EXCEPTION WHEN NO_DATA_FOUND THEN v_profile_nickname := '알 수 없음 (ID:' || v_profile_id || ')'; END;
 
     -- 검색 조건 출력
     DBMS_OUTPUT.PUT_LINE('--- 검색 조건 ---');
-    DBMS_OUTPUT.PUT_LINE('자막 필수: ' || v_sub_req); DBMS_OUTPUT.PUT_LINE('오디오 언어: ' || v_language);
+    DBMS_OUTPUT.PUT_LINE('자막 필수: ' || v_sub_req); DBMS_OUTPUT.PUT_LINE('콘텐츠 원어: ' || v_language); -- '오디오 언어' -> '콘텐츠 원어'
     DBMS_OUTPUT.PUT_LINE('정렬 기준: ' || v_sort_option);
     IF v_sort_option = 'RECOMMEND' THEN DBMS_OUTPUT.PUT_LINE('추천 기준 프로필: ' || v_profile_nickname || ' (ID: ' || v_profile_id || ')'); END IF;
     DBMS_OUTPUT.PUT_LINE('-------------------------------------'); DBMS_OUTPUT.PUT_LINE('--- 콘텐츠 목록 ---');
 
-    -- 정렬 기준에 따라 해당 커서 사용 및 루프 실행
+    -- 정렬 기준에 따라 해당 커서 사용 및 루프 실행 (이전과 동일)
     IF v_sort_option = 'TITLE_ASC' THEN
-        OPEN title_asc_cursor; LOOP FETCH title_asc_cursor INTO v_title, v_thumbnailURL; EXIT WHEN title_asc_cursor%NOTFOUND;
-            v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL);
-        END LOOP; CLOSE title_asc_cursor;
-
+        OPEN title_asc_cursor; LOOP FETCH title_asc_cursor INTO v_title, v_thumbnailURL; EXIT WHEN title_asc_cursor%NOTFOUND; v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL); END LOOP; CLOSE title_asc_cursor;
     ELSIF v_sort_option = 'TITLE_DESC' THEN
-        OPEN title_desc_cursor; LOOP FETCH title_desc_cursor INTO v_title, v_thumbnailURL; EXIT WHEN title_desc_cursor%NOTFOUND;
-            v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL);
-        END LOOP; CLOSE title_desc_cursor;
-
+        OPEN title_desc_cursor; LOOP FETCH title_desc_cursor INTO v_title, v_thumbnailURL; EXIT WHEN title_desc_cursor%NOTFOUND; v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL); END LOOP; CLOSE title_desc_cursor;
     ELSIF v_sort_option = 'RELEASE_DATE' THEN
-        OPEN release_date_cursor; LOOP FETCH release_date_cursor INTO v_title, v_thumbnailURL; EXIT WHEN release_date_cursor%NOTFOUND;
-            v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL);
-        END LOOP; CLOSE release_date_cursor;
-
+        OPEN release_date_cursor; LOOP FETCH release_date_cursor INTO v_title, v_thumbnailURL; EXIT WHEN release_date_cursor%NOTFOUND; v_found := TRUE; DBMS_OUTPUT.PUT_LINE('제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL); END LOOP; CLOSE release_date_cursor;
     ELSIF v_sort_option = 'RECOMMEND' THEN
-        OPEN recommendation_cursor; LOOP FETCH recommendation_cursor INTO v_title, v_thumbnailURL, v_score; EXIT WHEN recommendation_cursor%NOTFOUND;
-            v_found := TRUE; DBMS_OUTPUT.PUT_LINE('[점수: ' || NVL(v_score, 0) || '] 제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL);
-        END LOOP; CLOSE recommendation_cursor;
-
+        OPEN recommendation_cursor; LOOP FETCH recommendation_cursor INTO v_title, v_thumbnailURL, v_score; EXIT WHEN recommendation_cursor%NOTFOUND; v_found := TRUE; DBMS_OUTPUT.PUT_LINE('[점수: ' || NVL(v_score, 0) || '] 제목: ' || v_title || ', 썸네일URL: ' || v_thumbnailURL); END LOOP; CLOSE recommendation_cursor;
     END IF;
 
     -- 결과 없는 경우 메시지 출력
@@ -569,20 +416,16 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        -- 각 커서가 열려 있는지 확인하고 닫기 (더욱 안전하게)
-        IF title_asc_cursor%ISOPEN THEN CLOSE title_asc_cursor; END IF;
-        IF title_desc_cursor%ISOPEN THEN CLOSE title_desc_cursor; END IF;
-        IF release_date_cursor%ISOPEN THEN CLOSE release_date_cursor; END IF;
-        IF recommendation_cursor%ISOPEN THEN CLOSE recommendation_cursor; END IF;
+        IF title_asc_cursor%ISOPEN THEN CLOSE title_asc_cursor; END IF; IF title_desc_cursor%ISOPEN THEN CLOSE title_desc_cursor; END IF; IF release_date_cursor%ISOPEN THEN CLOSE release_date_cursor; END IF; IF recommendation_cursor%ISOPEN THEN CLOSE recommendation_cursor; END IF;
         DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM);
 END;
 /
 
 
+
 --------------------------------------------------------------------------------
--- 7 - 1. 추천순 X
--- 드라마만 출력 ->
--- 시즌 있는 콘텐츠 + 선택적 장르(&req_genre) 필터링 (기본값 '전체') 
+-- 추천 순 X
+-- 5-1. [드라마만 출력] -> 시즌 있는 콘텐츠 + 선택적 장르(&req_genre) 필터링 (기본값 '전체') 
 DECLARE
     -- & 변수로 사용자 입력 받기 (빈 값 허용됨)
     v_req_genre_input VARCHAR2(100) := '&req_genre';
@@ -596,7 +439,7 @@ DECLARE
             cbi.title,
             cbi.thumbnailURL
         FROM
-            vw_content_basic_info cbi -- 뷰 사용 (미리 생성되어 있어야 함)
+            vw_content_basic_info cbi -- 뷰 사용 
         WHERE
             -- 1. 시즌 필터: seasonNum이 NULL이 아닌 video가 있는지 확인
             EXISTS (
@@ -658,12 +501,9 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM);
 END;
 /
-
 --------------------------------------------------------------------------------
--- 7 - 2. 추천순 O
--- 드라마만 출력 ->
--- [시리즈물] 선택적 장르(&req_genre, 기본 '전체') + 추천순(&profile_id) 정렬 + 추천 점수 포함 DBMS 출력
-
+-- 추천순
+-- 5-2 . [드라마만 출력]-> [시리즈물] 선택적 장르(&req_genre, 기본 '전체') + 추천순(&profile_id) 정렬 + 추천 점수 포함 
 DECLARE
     -- 입력 변수 (& 사용, 순서 변경: 프로필 -> 장르)
     v_profile_id      profile.profileID%TYPE := &profile_id; -- <<< 1. 추천 기준 프로필 ID 입력
@@ -763,9 +603,10 @@ END;
 /
 
 
---------------------------------------------------------------------------------
--- 8 - 1. 추천순 X
--- 영화(시즌 없는 콘텐츠) + 선택적 장르(&req_genre) 필터링 (기본값 '전체') + DBMS 출력
+
+-------------------------------------------------------------------------------
+-- 추천 순X
+--6-1. 영화(시즌 없는 콘텐츠) + 선택적 장르(&req_genre) 필터링 (기본값 '전체') 
 DECLARE
     -- & 변수로 사용자 입력 받기 (빈 값 허용됨)
     v_req_genre_input VARCHAR2(100) := '&req_genre';
@@ -844,11 +685,9 @@ EXCEPTION
 END;
 /
 
---------------------------------------------------------------------------------
--- 8 - 2. 추천순 O
--- [영화 등] 선택적 장르(&req_genre) 필터링 + 추천순(&profile_id) 정렬 + DBMS 출력
-
-
+-----------------------------------------------------------------------------
+-- 추천순 O
+-- 6-2) [영화] 선택적 장르(&req_genre) 필터링 + 추천순(&profile_id) 정렬
 DECLARE
     -- 입력 변수 (& 사용, 순서 변경: 프로필 -> 장르)
     v_profile_id      profile.profileID%TYPE := &profile_id;     -- <<< 1. 추천 기준 프로필 ID 입력
@@ -948,9 +787,9 @@ END;
 /
 
 
---------------------------------------------------------------------------------
 
--- 9. 배우 이름(&actor_name)을 입력받아 해당 배우가 출연한 '모든 콘텐츠' 목록 출력
+--------------------------------------------------------------------------------
+-- 7. 배우 이름(&actor_name)을 입력받아 해당 배우가 출연한 '모든 콘텐츠' 목록 출력
 
 DECLARE
     -- & 변수로 배우 이름 입력받음
@@ -1028,7 +867,7 @@ END;
 
 
 --------------------------------------------------------------------------------
--- 10. 크리에이터 이름(&creator_name)을 입력받아 해당 크리에이터의 '모든 참여 콘텐츠' 목록 출력
+-- 8. 크리에이터 이름(&creator_name)을 입력받아 해당 크리에이터의 '모든 참여 콘텐츠' 목록 출력
 DECLARE
     -- & 변수로 크리에이터 이름 입력받음
     v_creator_name  creator.creatorName%TYPE := '&creator_name';
@@ -1101,119 +940,102 @@ EXCEPTION
 END;
 /
 
+
 --------------------------------------------------------------------------------
--- 11. 특정 프로필(&profile_id)의 시청 기록(최신) 및 조건부 다음화 보기 출력 
+-- 9. 특정 프로필(&profile_id)의 시청 중인 콘텐츠 목록 출력 
+
 DECLARE
-    v_profile_id      profile.profileID%TYPE  := &profile_id;
+    v_profile_id      profile.profileID%TYPE  := &profile_id; -- & 변수로 프로필 ID 입력
     v_profile_nickname profile.nickname%TYPE;
 
-    -- 마지막 에피소드 정보 저장용 타입 및 변수
-    TYPE t_final_epi_rec IS RECORD (max_season NUMBER, max_epi NUMBER);
-    -- *** 수정: INDEX BY 타입을 PLS_INTEGER로 변경 ***
-    TYPE t_final_epi_map IS TABLE OF t_final_epi_rec INDEX BY PLS_INTEGER;
-    v_final_episode_map t_final_epi_map; -- 시리즈별 마지막 시즌/에피 정보 저장
+    -- 커서 수정: DISTINCT 제거, 진행도 및 에피소드 정보 컬럼 추가
+    CURSOR watching_content_cursor (p_profile_id IN profile.profileID%TYPE) IS
+        SELECT
+            c.title,                -- 콘텐츠(시리즈) 제목
+            c.thumbnailURL,         -- 콘텐츠 대표 썸네일
+            vh.totalViewingTime,    -- 시청 시간 (초)
+            v.epiruntime,           -- 에피소드 총 길이 (분)
+            v.seasonNum,            -- 시즌 번호
+            v.epiNum,               -- 에피소드 번호
+            v.epiTitle              -- 에피소드 제목
+        FROM viewingHistory vh
+        JOIN video v ON vh.videoID = v.videoID
+        JOIN content c ON v.contentID = c.contentID
+        WHERE vh.profileID = p_profile_id -- 입력받은 프로필 ID로 필터링
+          AND vh.isCompleted = 'N'      -- 완료 안된 것만
+        ORDER BY c.title ASC, v.seasonNum ASC NULLS LAST, v.epiNum ASC NULLS LAST; -- 콘텐츠 제목, 시즌/에피 순 정렬
 
-    -- 시청 기록 저장을 위한 타입 및 변수
-    TYPE t_watch_rec IS RECORD (
-        is_completed    viewingHistory.isCompleted%TYPE, -- CHAR(1)
-        progress_sec    NUMBER
-    );
-    TYPE t_watch_hist_map IS TABLE OF t_watch_rec INDEX BY PLS_INTEGER; -- videoID를 키로 사용 (PLS_INTEGER)
-    v_watch_history   t_watch_hist_map; -- 해당 콘텐츠의 모든 비디오 시청 상태 저장
-
-    -- 임시 테이블 타입 (BULK COLLECT용)
-    TYPE t_watch_history_rec IS RECORD (
-        videoID         viewingHistory.videoID%TYPE,
-        isCompleted     viewingHistory.isCompleted%TYPE,
-        totalViewingTime NUMBER
-    );
-    TYPE t_watch_history_tab IS TABLE OF t_watch_history_rec INDEX BY BINARY_INTEGER;
-    v_temp_hist_tab t_watch_history_tab;
-
-    -- 루프용 변수 (이하 다른 변수 선언은 이전과 동일)
-    v_content_id        content.contentID%TYPE;
+    -- 루프용 변수 (진행도 및 에피소드 정보 추가)
     v_title             content.title%TYPE;
     v_thumbnailURL      content.thumbnailURL%TYPE;
-    v_progress_sec      viewingHistory.totalViewingTime%TYPE;
-    v_total_runtime_min video.epiruntime%TYPE;
+    v_progress_sec      viewingHistory.totalViewingTime%TYPE; -- 시청 시간(초)
+    v_total_runtime_min video.epiruntime%TYPE;        -- 총 시간(분)
     v_season            video.seasonNum%TYPE;
     v_epi_num           video.epiNum%TYPE;
     v_epi_title         video.epiTitle%TYPE;
-    v_is_completed      viewingHistory.isCompleted%TYPE;
     v_found             BOOLEAN := FALSE;
-    v_max_season_num        video.seasonNum%TYPE; -- 시리즈 여부 확인 및 헤더 출력용
-    v_max_epi_num_in_last_season video.epiNum%TYPE; -- 마지막 화 확인용
-
 
 BEGIN
-    -- 1. 프로필 닉네임 조회 (변경 없음)
-    BEGIN SELECT nickname INTO v_profile_nickname FROM profile WHERE profileID = v_profile_id;
-    EXCEPTION WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('오류: 프로필 ID ' || v_profile_id || '를 찾을 수 없습니다.'); RETURN; WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('오류: 프로필 정보 조회 중 문제 발생 - ' || SQLERRM); RETURN; END;
+    -- 1. 입력된 프로필 ID로 닉네임 조회
+    BEGIN
+        SELECT nickname INTO v_profile_nickname
+        FROM profile
+        WHERE profileID = v_profile_id;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('오류: 프로필 ID ' || v_profile_id || '를 찾을 수 없습니다.');
+            RETURN;
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('오류: 프로필 정보 조회 중 문제 발생 - ' || SQLERRM);
+            RETURN;
+    END;
 
-    -- 2. 시리즈 콘텐츠들의 마지막 시즌/에피소드 정보 미리 조회 (맵 사용, 이전과 동일)
-    v_final_episode_map.DELETE;
-    FOR rec IN (SELECT contentID, MAX(seasonNum) as max_s FROM video WHERE seasonNum IS NOT NULL GROUP BY contentID) LOOP
-        v_final_episode_map(rec.contentID).max_season := rec.max_s; -- <<< 이제 오류 없이 할당 가능
-        SELECT MAX(epiNum) INTO v_final_episode_map(rec.contentID).max_epi FROM video WHERE contentID = rec.contentID AND seasonNum = rec.max_s; -- <<< 이제 오류 없이 할당 가능
-    END LOOP;
-
-    -- 3. 헤더 출력 (변경 없음)
+    -- 2. 헤더 출력
     DBMS_OUTPUT.PUT_LINE('-------------------------------------');
-    DBMS_OUTPUT.PUT_LINE(v_profile_nickname || ' 님의 시청 기록 (최신 상태)');
+    DBMS_OUTPUT.PUT_LINE(v_profile_nickname || ' 님이 시청중인 콘텐츠');
     DBMS_OUTPUT.PUT_LINE('---');
 
-    -- 4. 모든 관련 시청 기록의 '최신 상태'를 맵에 저장 (이전과 동일)
-    v_watch_history.DELETE;
-    BEGIN SELECT vh.videoID, vh.isCompleted, vh.totalViewingTime BULK COLLECT INTO v_temp_hist_tab FROM ( SELECT vh.videoID, vh.isCompleted, vh.totalViewingTime, ROW_NUMBER() OVER(PARTITION BY vh.videoID ORDER BY vh.lastViewat DESC) as rn FROM viewingHistory vh JOIN video v ON vh.videoID = v.videoID WHERE vh.profileID = v_profile_id) vh WHERE rn = 1; IF v_temp_hist_tab.COUNT > 0 THEN FOR i IN v_temp_hist_tab.FIRST .. v_temp_hist_tab.LAST LOOP v_watch_history(v_temp_hist_tab(i).videoID).is_completed := v_temp_hist_tab(i).isCompleted; v_watch_history(v_temp_hist_tab(i).videoID).progress_sec := v_temp_hist_tab(i).totalViewingTime; END LOOP; END IF; EXCEPTION WHEN NO_DATA_FOUND THEN NULL; END;
+    -- 3. 커서 열고 결과 출력
+    OPEN watching_content_cursor(p_profile_id => v_profile_id);
+    LOOP
+        -- FETCH 수정: 추가된 변수 포함
+        FETCH watching_content_cursor INTO
+            v_title, v_thumbnailURL, v_progress_sec, v_total_runtime_min,
+            v_season, v_epi_num, v_epi_title;
+        EXIT WHEN watching_content_cursor%NOTFOUND;
+        v_found := TRUE; -- 결과 찾음 표시
 
-    -- 5. 커서 열고 결과 출력 (이전과 동일 - 최신 기록 커서)
-    DECLARE -- 커서 선언을 위한 내부 블록
-        CURSOR latest_history_cursor (p_profile_id IN profile.profileID%TYPE) IS
-            SELECT contentID, title, thumbnailURL, totalViewingTime, epiruntime, seasonNum, epiNum, epiTitle, isCompleted
-            FROM ( SELECT c.contentID, c.title, c.thumbnailURL, vh.totalViewingTime, v.epiruntime, v.seasonNum, v.epiNum, v.epiTitle, vh.isCompleted, ROW_NUMBER() OVER (PARTITION BY vh.videoID ORDER BY vh.lastViewat DESC) as rn FROM viewingHistory vh JOIN video v ON vh.videoID = v.videoID JOIN content c ON v.contentID = c.contentID WHERE vh.profileID = p_profile_id )
-            WHERE rn = 1 ORDER BY title ASC, seasonNum ASC NULLS LAST, epiNum ASC NULLS LAST;
-    BEGIN
-        v_found := FALSE; -- 루프 전 초기화
-        OPEN latest_history_cursor(p_profile_id => v_profile_id);
-        LOOP
-            FETCH latest_history_cursor INTO v_content_id, v_title, v_thumbnailURL, v_progress_sec, v_total_runtime_min, v_season, v_epi_num, v_epi_title, v_is_completed;
-            EXIT WHEN latest_history_cursor%NOTFOUND;
-            v_found := TRUE;
+        -- 출력 수정: 에피소드 정보 및 진행도 추가
+        DBMS_OUTPUT.PUT_LINE('  제목: ' || v_title);
+        -- 시즌 정보가 있는 경우(시리즈물 에피소드) 회차 정보 표시
+        IF v_season IS NOT NULL THEN
+             DBMS_OUTPUT.PUT_LINE('    회차: 시즌 ' || v_season || ' 에피소드 ' || v_epi_num || ' (' || NVL(v_epi_title, '제목 없음') || ')');
+        END IF;
+        DBMS_OUTPUT.PUT_LINE('    썸네일URL: ' || NVL(v_thumbnailURL, '없음')); -- 콘텐츠 썸네일 사용
+        -- 진행도 표시 (초 -> 분 변환)
+        DBMS_OUTPUT.PUT_LINE('    진행도: ' || ROUND(v_progress_sec / 60) || '분 / ' || v_total_runtime_min || '분');
+        DBMS_OUTPUT.PUT_LINE('  ---'); -- 각 항목 구분
 
-            DBMS_OUTPUT.PUT_LINE('  제목: ' || v_title);
-            IF v_season IS NOT NULL THEN DBMS_OUTPUT.PUT_LINE('    회차: 시즌 ' || v_season || ' 에피소드 ' || v_epi_num || ' (' || NVL(v_epi_title, '제목 없음') || ')'); END IF;
-            DBMS_OUTPUT.PUT_LINE('    썸네일URL: ' || NVL(v_thumbnailURL, '없음'));
+    END LOOP;
+    CLOSE watching_content_cursor;
 
-            -- 시청 상태 및 조건부 다음화 보기 출력 (로직은 이전과 동일하나, v_final_episode_map 참조가 이제 유효함)
-            IF v_is_completed = 'Y' THEN
-                DBMS_OUTPUT.PUT_LINE('    ** 시청 완료 **');
-                IF v_season IS NOT NULL AND v_final_episode_map.EXISTS(v_content_id) AND NOT (v_season = v_final_episode_map(v_content_id).max_season AND v_epi_num = v_final_episode_map(v_content_id).max_epi) THEN
-                    DECLARE v_next_season video.seasonNum%TYPE; v_next_epi_num video.epiNum%TYPE; v_next_epi_title video.epiTitle%TYPE; v_next_found BOOLEAN := FALSE;
-                    BEGIN BEGIN SELECT seasonNum, epiNum, epiTitle INTO v_next_season, v_next_epi_num, v_next_epi_title FROM video v WHERE v.contentID = v_content_id AND v.seasonNum = v_season AND v.epiNum = v_epi_num + 1; v_next_found := TRUE;
-                          EXCEPTION WHEN NO_DATA_FOUND THEN BEGIN SELECT seasonNum, epiNum, epiTitle INTO v_next_season, v_next_epi_num, v_next_epi_title FROM video v WHERE v.contentID = v_content_id AND v.seasonNum = v_season + 1 AND v.epiNum = 1; v_next_found := TRUE; EXCEPTION WHEN NO_DATA_FOUND THEN v_next_found := FALSE; END; END;
-                          IF v_next_found THEN DBMS_OUTPUT.PUT_LINE('    >> 다음화 보기: 시즌 ' || v_next_season || ' 에피소드 ' || v_next_epi_num || ' (' || NVL(v_next_epi_title,'제목 없음') || ')'); END IF;
-                    END;
-                END IF;
-            ELSIF v_is_completed = 'N' THEN
-                DBMS_OUTPUT.PUT_LINE('    ** 시청 중 (진행: ' || ROUND(v_progress_sec / 60) || '분 / ' || v_total_runtime_min || '분) **');
-            END IF;
-            DBMS_OUTPUT.PUT_LINE('  ---');
-        END LOOP;
-        CLOSE latest_history_cursor;
+    -- 4. 시청 중인 콘텐츠가 없는 경우 메시지 출력
+    IF NOT v_found THEN
+        DBMS_OUTPUT.PUT_LINE('  (시청 중인 콘텐츠가 없습니다.)');
+    END IF;
 
-        IF NOT v_found THEN DBMS_OUTPUT.PUT_LINE('  (시청 기록이 없습니다.)'); END IF;
-        DBMS_OUTPUT.PUT_LINE('-------------------------------------');
-    END; -- 커서 처리를 위한 내부 블록 종료
+    DBMS_OUTPUT.PUT_LINE('-------------------------------------');
 
-EXCEPTION WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM); -- 커서는 내부 블록에서 닫힘
+EXCEPTION
+    WHEN OTHERS THEN -- 그 외 예외 처리
+        IF watching_content_cursor%ISOPEN THEN CLOSE watching_content_cursor; END IF;
+        DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM);
 END;
 /
 
 
-
-
 --------------------------------------------------------------------------------
--- 12. 신작(공개일 기준 2주 이내) 콘텐츠의 제목과 썸네일 출력 (뷰 활용)
+-- 10. 신작(공개일 기준 2주 이내) 콘텐츠의 제목과 썸네일 출력 
 
 DECLARE
     -- 커서: 뷰와 content 테이블을 조인하여 신작 필터링 및 정렬
@@ -1268,11 +1090,10 @@ EXCEPTION
         IF new_releases_cursor%ISOPEN THEN CLOSE new_releases_cursor; END IF; -- 커서가 열려있으면 닫기
         DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM);
 END;
-/
 
 --------------------------------------------------------------------------------
--- 13. [시리즈물] 중 선택적 장르(&req_genre, 기본 '전체')에서 랜덤으로 1개 선택 후 상세 정보 DBMS 출력 (ROWNUM 수정)
-
+-- 상단 시리즈 탭 선택시 랜덤으로 콘텐츠 정보 표시
+--11. [시리즈물] 중 선택적 장르(&req_genre, 기본 '전체')에서 랜덤으로 1개 선택 후 상세 정보 DBMS 출력
 DECLARE
     v_req_genre_input VARCHAR2(100) := '&req_genre';
     v_filter_genre    genre.genreName%TYPE;
@@ -1318,215 +1139,9 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('오류 발생: ' || SQLERRM);
 END;
 /
+
 --------------------------------------------------------------------------------
--- 14. 특정 콘텐츠 상세 정보 + 관련 콘텐츠 (콘텐츠 유사성 기반 추천) + DBMS 출력 (수정 9: 관련 콘텐츠 커서 구조 변경)
-
-DECLARE
-    -- 입력 변수 (프로필 ID 먼저)
-    v_profile_id      profile.profileID%TYPE := &profile_id;
-    v_content_title   content.title%TYPE     := '&content_title';
-
-    -- 기본 정보 저장 변수 (이전과 동일)
-    v_content_id      content.contentID%TYPE;
-    v_profile_nickname profile.nickname%TYPE;
-    v_content_rec     content%ROWTYPE;
-    v_is_series       BOOLEAN := FALSE;
-    v_total_seasons   NUMBER;
-    v_ratingLabel     contentRating.ratingLabel%TYPE;
-    v_cast            VARCHAR2(4000);
-    v_genres          VARCHAR2(1000);
-    v_features        VARCHAR2(1000);
-    v_creators        VARCHAR2(2000);
-    v_has_subtitles   BOOLEAN := FALSE;
-    v_is_wishlisted   BOOLEAN := FALSE;
-    v_is_rated        BOOLEAN := FALSE;
-    TYPE t_watch_hist_map IS TABLE OF viewingHistory.totalViewingTime%TYPE INDEX BY PLS_INTEGER;
-    v_watch_history   t_watch_hist_map;
-    v_title           content.title%TYPE;
-    v_thumbnailURL    content.thumbnailURL%TYPE;
-    v_temp_num        NUMBER;
-    v_found           BOOLEAN := FALSE;
-    v_is_watching             BOOLEAN := FALSE;
-    v_watching_video_id       video.videoID%TYPE;
-    v_watching_season_num     video.seasonNum%TYPE;
-    v_watching_epi_num        video.epiNum%TYPE;
-    v_watching_epi_title      video.epiTitle%TYPE;
-    v_watching_epi_runtime    video.epiruntime%TYPE;
-    v_watching_epi_desc       video.epiDescription%TYPE;
-    v_watching_progress_sec   viewingHistory.totalViewingTime%TYPE;
-    v_display_runtime   VARCHAR2(50);
-    v_display_desc      VARCHAR2(3000);
-    v_first_epi_runtime video.epiruntime%TYPE;
-    -- 임시 테이블 타입 (BULK COLLECT용)
-    TYPE t_watch_history_rec IS RECORD (
-        videoID         viewingHistory.videoID%TYPE,
-        isCompleted     viewingHistory.isCompleted%TYPE,
-        totalViewingTime viewingHistory.totalViewingTime%TYPE
-    );
-    TYPE t_watch_history_tab IS TABLE OF t_watch_history_rec INDEX BY BINARY_INTEGER;
-    v_temp_hist_tab t_watch_history_tab;
-
-
-BEGIN
-    -- ==========================================================
-    -- 1. 기본 정보 조회 (프로필, 콘텐츠) - 변경 없음
-    -- ==========================================================
-    BEGIN SELECT nickname INTO v_profile_nickname FROM profile WHERE profileID = v_profile_id; EXCEPTION WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('오류: 프로필 ID ' || v_profile_id || '를 찾을 수 없습니다.'); RETURN; WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('오류: 프로필 정보 조회 중 문제 발생 - ' || SQLERRM); RETURN; END;
-    BEGIN SELECT * INTO v_content_rec FROM content WHERE title = v_content_title; v_content_id := v_content_rec.contentID; EXCEPTION WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('오류: 콘텐츠 제목 ''' || v_content_title || ''' 를 찾을 수 없습니다.'); RETURN; WHEN TOO_MANY_ROWS THEN DBMS_OUTPUT.PUT_LINE('오류: 제목 ''' || v_content_title || ''' 에 해당하는 콘텐츠가 여러 개 있습니다.'); RETURN; WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('오류: 콘텐츠 정보 조회 중 문제 발생 - ' || SQLERRM); RETURN; END;
-    BEGIN SELECT MAX(v.seasonNum) INTO v_total_seasons FROM video v WHERE v.contentID = v_content_id AND v.seasonNum IS NOT NULL; IF v_total_seasons IS NOT NULL AND v_total_seasons >= 1 THEN v_is_series := TRUE; ELSE v_is_series := FALSE; v_total_seasons := NULL; END IF; END;
-    BEGIN SELECT COUNT(*) INTO v_temp_num FROM subtitle s JOIN video v ON s.videoID = v.videoID WHERE v.contentID = v_content_id; IF v_temp_num > 0 THEN v_has_subtitles := TRUE; ELSE v_has_subtitles := FALSE; END IF; END;
-    BEGIN SELECT MAX(cr.ratingLabel) INTO v_ratingLabel FROM contentRating cr WHERE cr.contentID = v_content_id; END;
-    BEGIN SELECT COUNT(*) INTO v_temp_num FROM wishList wl JOIN video v ON wl.videoID = v.videoID WHERE wl.profileID = v_profile_id AND v.contentID = v_content_id; IF v_temp_num > 0 THEN v_is_wishlisted := TRUE; ELSE v_is_wishlisted := FALSE; END IF; END;
-    BEGIN SELECT COUNT(*) INTO v_temp_num FROM userRating ur WHERE ur.profileID = v_profile_id AND ur.contentID = v_content_id; IF v_temp_num > 0 THEN v_is_rated := TRUE; ELSE v_is_rated := FALSE; END IF; END;
-    BEGIN SELECT LISTAGG(a.name, ', ') WITHIN GROUP (ORDER BY al.actorListid) INTO v_cast FROM actor a JOIN actorList al ON a.actorid = al.actorid WHERE al.contentID = v_content_id; END;
-    BEGIN SELECT LISTAGG(g.genreName, ', ') WITHIN GROUP (ORDER BY g.genreName) INTO v_genres FROM genre g JOIN genreList gl ON g.genreID = gl.genreID WHERE gl.contentID = v_content_id; END;
-    BEGIN SELECT LISTAGG(f.featureName, ', ') WITHIN GROUP (ORDER BY f.featureName) INTO v_features FROM feature f JOIN featureList fl ON f.featureID = fl.featureID WHERE fl.contentID = v_content_id; END;
-    BEGIN SELECT LISTAGG(cr.creatorName, ', ') WITHIN GROUP (ORDER BY cr.creatorName) INTO v_creators FROM creator cr JOIN creatorList cl ON cr.creatorID = cl.creatorID WHERE cl.contentID = v_content_id; END;
-
-    -- 모든 관련 시청 기록의 '최신 상태'를 맵에 저장 (이전과 동일 - ROWNUM 수정됨)
-    v_watch_history.DELETE;
-    BEGIN SELECT vh.videoID, vh.isCompleted, vh.totalViewingTime BULK COLLECT INTO v_temp_hist_tab FROM ( SELECT vh.videoID, vh.isCompleted, vh.totalViewingTime, ROW_NUMBER() OVER(PARTITION BY vh.videoID ORDER BY vh.lastViewat DESC) as rn FROM viewingHistory vh JOIN video v ON vh.videoID = v.videoID WHERE vh.profileID = v_profile_id AND v.contentID = v_content_id ) vh WHERE rn = 1;
-        IF v_temp_hist_tab.COUNT > 0 THEN FOR i IN v_temp_hist_tab.FIRST .. v_temp_hist_tab.LAST LOOP v_watch_history(v_temp_hist_tab(i).videoID).is_completed := v_temp_hist_tab(i).isCompleted; v_watch_history(v_temp_hist_tab(i).videoID).progress_sec := v_temp_hist_tab(i).totalViewingTime; END LOOP; END IF;
-    EXCEPTION WHEN NO_DATA_FOUND THEN NULL; -- 데이터 없으면 그냥 넘어감
-    END;
-    -- 대표 '시청 중' 정보 설정 (이전과 동일 - ROWNUM 수정됨)
-    BEGIN SELECT epiruntime, totalViewingTime INTO v_watching_epi_runtime, v_watching_progress_sec FROM ( SELECT v.epiruntime, vh.totalViewingTime FROM viewingHistory vh JOIN video v ON vh.videoID = v.videoID WHERE vh.profileID = v_profile_id AND v.contentID = v_content_id AND vh.isCompleted = 'N' ORDER BY vh.lastViewat DESC ) WHERE ROWNUM = 1;
-    EXCEPTION WHEN NO_DATA_FOUND THEN v_watching_epi_runtime := NULL; v_watching_progress_sec := NULL; END;
-    -- 첫 회차 정보 조회 (이전과 동일 - ROWNUM 수정됨)
-    IF v_is_series AND NOT v_watch_history.EXISTS(v_watching_video_id) THEN BEGIN SELECT epiruntime INTO v_first_epi_runtime FROM ( SELECT v.epiruntime FROM video v WHERE v.contentID = v_content_id ORDER BY v.seasonNum ASC NULLS LAST, v.epiNum ASC NULLS LAST ) WHERE ROWNUM = 1; EXCEPTION WHEN NO_DATA_FOUND THEN v_first_epi_runtime := NULL; END; END IF; -- 시청중('N') 기록 없을때만 조회하도록 수정
-    -- 설명 정보 설정 (이전과 동일)
-    IF v_is_series AND v_watch_history.COUNT > 0 THEN DECLARE temp_desc video.epiDescription%TYPE; BEGIN SELECT epiDescription INTO temp_desc FROM ( SELECT v.epiDescription FROM viewingHistory vh JOIN video v ON vh.videoID = v.videoID WHERE vh.profileID = v_profile_id AND v.contentID = v_content_id ORDER BY vh.lastViewat DESC) WHERE ROWNUM = 1; v_display_desc := NVL(temp_desc, v_content_rec.description); EXCEPTION WHEN NO_DATA_FOUND THEN v_display_desc := v_content_rec.description; END; ELSE v_display_desc := v_content_rec.description; END IF;
-    -- 러닝타임 정보 설정 (이전과 동일)
-    IF v_is_series THEN IF v_watching_epi_runtime IS NOT NULL THEN v_display_runtime := NVL(TO_CHAR(v_watching_epi_runtime), '정보 없음') || '분 (시청 중)'; ELSE v_display_runtime := NVL(TO_CHAR(v_first_epi_runtime), TO_CHAR(v_content_rec.runtime)) || '분 (첫 회)'; END IF; ELSE v_display_runtime := v_content_rec.runtime || '분'; END IF;
-
-
-    -- ==========================================================
-    -- 1차 정보 출력 - 변경 없음
-    -- ==========================================================
-    DBMS_OUTPUT.PUT_LINE('--- 콘텐츠 상세 정보 (' || v_profile_nickname || ' 님 기준) ---');
-    DBMS_OUTPUT.PUT_LINE('-------------------------------------------------');
-    DBMS_OUTPUT.PUT_LINE('콘텐츠 썸네일: ' || NVL(v_content_rec.thumbnailURL, '없음'));
-    DBMS_OUTPUT.PUT_LINE('제목: ' || v_content_rec.title);
-    DBMS_OUTPUT.PUT_LINE('개봉년도: ' || v_content_rec.releaseYear || ' / 시청 등급: ' || NVL(v_ratingLabel, '정보 없음') || CASE WHEN v_is_series THEN ' / 총 시즌: ' || NVL(TO_CHAR(v_total_seasons), '정보 없음') || '개' ELSE '' END);
-    DBMS_OUTPUT.PUT_LINE('러닝타임: ' || v_display_runtime);
-    IF v_watching_progress_sec IS NOT NULL AND v_watching_epi_runtime IS NOT NULL THEN DBMS_OUTPUT.PUT_LINE('시청 위치: 총 ' || v_watching_epi_runtime || '분 중 ' || ROUND(v_watching_progress_sec / 60) || '분 시청'); ELSE DBMS_OUTPUT.PUT_LINE('시청 위치: 시청 중 아님'); END IF;
-    DBMS_OUTPUT.PUT_LINE('찜 여부: ' || CASE WHEN v_is_wishlisted THEN 'Y' ELSE 'N' END || ' / 내 평가: ' || CASE WHEN v_is_rated THEN '평가함' ELSE '평가 안함' END || ' / 자막 유무: ' || CASE WHEN v_has_subtitles THEN 'Y' ELSE 'N' END);
-    DBMS_OUTPUT.PUT_LINE('화질 정보: ' || NVL(v_content_rec.videoQuality, '정보 없음'));
-    DBMS_OUTPUT.PUT_LINE('설명: ' || SUBSTR(NVL(v_display_desc, '없음'), 1, 500) || CASE WHEN LENGTH(v_display_desc) > 500 THEN '...' ELSE '' END);
-    DBMS_OUTPUT.PUT_LINE('-------------------------------------------------');
-
-    -- ==========================================================
-    -- 섹션 1: 회차 정보 - 변경 없음
-    -- ==========================================================
-    IF v_is_series THEN
-        DBMS_OUTPUT.PUT_LINE('--- 회차 정보 ---'); v_found := FALSE;
-        FOR epi_rec IN (SELECT v.videoID, v.seasonNum, v.epiNum, v.epiTitle, v.epiImageURL, v.epiDescription, v.epiruntime FROM video v WHERE v.contentID = v_content_id AND v.seasonNum IS NOT NULL ORDER BY v.seasonNum ASC NULLS LAST, v.epiNum ASC NULLS LAST) LOOP
-            v_found := TRUE; DBMS_OUTPUT.PUT_LINE('  --- S' || epi_rec.seasonNum || ' E' || epi_rec.epiNum || ': ' || epi_rec.epiTitle || ' (' || epi_rec.epiruntime || '분) ---'); DBMS_OUTPUT.PUT_LINE('    썸네일URL: ' || NVL(epi_rec.epiImageURL, '없음')); DBMS_OUTPUT.PUT_LINE('    설명: ' || SUBSTR(NVL(epi_rec.epiDescription, '없음'), 1, 100) || CASE WHEN LENGTH(epi_rec.epiDescription) > 100 THEN '...' ELSE '' END);
-            IF v_watch_history.EXISTS(epi_rec.videoID) THEN IF v_watch_history(epi_rec.videoID).is_completed = 'Y' THEN DBMS_OUTPUT.PUT_LINE('    ** 시청 완료 **'); ELSIF v_watch_history(epi_rec.videoID).is_completed = 'N' THEN DBMS_OUTPUT.PUT_LINE('    ** 시청 중 (진행: ' || ROUND(v_watch_history(epi_rec.videoID).progress_sec / 60) || '분 / ' || epi_rec.epiruntime || '분) **'); END IF; END IF;
-        END LOOP; IF NOT v_found THEN DBMS_OUTPUT.PUT_LINE('  (회차 정보가 없습니다.)'); END IF; DBMS_OUTPUT.PUT_LINE('-------------------------------------');
-    END IF;
-
-
-    -- ==========================================================
-    -- 섹션 2: 함께 시청된 콘텐츠 (*** 커서 재수정: CTE + JOIN 방식 ***)
-    -- ==========================================================
-    DBMS_OUTPUT.PUT_LINE('--- 함께 시청된 콘텐츠 (유사 콘텐츠) ---');
-    DECLARE
-        -- *** 수정된 커서 정의: CTE + JOIN 방식으로 유사도 점수 계산 ***
-        CURSOR related_content_cursor IS
-             SELECT * FROM ( -- 서브쿼리 시작 (ROWNUM 필터링용)
-                 WITH TargetGenres AS ( -- 현재 콘텐츠의 장르 ID 목록
-                    SELECT genreID FROM genreList WHERE contentID = v_content_id
-                 ), TargetFeatures AS ( -- 현재 콘텐츠의 특징 ID 목록
-                    SELECT featureID FROM featureList WHERE contentID = v_content_id
-                 ), SharedGenreCounts AS ( -- 다른 콘텐츠별 공유 장르 수 계산
-                    SELECT gl.contentID, COUNT(tg.genreID) as shared_genre_count
-                    FROM genreList gl JOIN TargetGenres tg ON gl.genreID = tg.genreID
-                    WHERE gl.contentID != v_content_id -- 현재 콘텐츠 제외
-                    GROUP BY gl.contentID
-                 ), SharedFeatureCounts AS ( -- 다른 콘텐츠별 공유 특징 수 계산
-                    SELECT fl.contentID, COUNT(tf.featureID) as shared_feature_count
-                    FROM featureList fl JOIN TargetFeatures tf ON fl.featureID = tf.featureID
-                    WHERE fl.contentID != v_content_id -- 현재 콘텐츠 제외
-                    GROUP BY fl.contentID
-                 )
-                 -- 메인 쿼리: 콘텐츠 정보 + 유사도 점수 계산 및 정렬
-                 SELECT
-                     c.contentID, c.title, c.thumbnailURL, c.releaseYear, c.videoQuality, c.description, c.runtime,
-                     (SELECT MAX(cr.ratingLabel) FROM contentRating cr WHERE cr.contentID = c.contentID) as rating_label,
-                     (SELECT MAX(v.seasonNum) FROM video v WHERE v.contentID = c.contentID AND v.seasonNum IS NOT NULL) as max_season,
-                     -- 찜 여부는 여전히 현재 프로필 기준
-                     (SELECT COUNT(*) FROM wishList wl JOIN video v ON wl.videoID = v.videoID WHERE wl.profileID = v_profile_id AND v.contentID = c.contentID) as wish_count,
-                     -- 유사도 점수 계산 (사전 계산된 공유 카운트 사용)
-                     (NVL(sgc.shared_genre_count, 0) + NVL(sfc.shared_feature_count, 0)) as similarity_score
-                 FROM content c
-                 LEFT JOIN SharedGenreCounts sgc ON c.contentID = sgc.contentID -- 공유 장르 수 조인
-                 LEFT JOIN SharedFeatureCounts sfc ON c.contentID = sfc.contentID -- 공유 특징 수 조인
-                 WHERE c.contentID != v_content_id -- 현재 콘텐츠 제외
-                 ORDER BY similarity_score DESC NULLS LAST, c.title ASC -- <<< 유사도 점수 기준으로 정렬
-             ) -- 서브쿼리 종료
-             WHERE ROWNUM <= 10; -- 상위 10개
-
-        -- 내부 루프용 변수들
-        v_rel_similarity_score NUMBER;
-        v_rel_content_id  content.contentID%TYPE; v_rel_title content.title%TYPE; v_rel_thumb content.thumbnailURL%TYPE; v_rel_year content.releaseYear%TYPE; v_rel_quality content.videoQuality%TYPE; v_rel_desc content.description%TYPE; v_rel_runtime content.runtime%TYPE; v_rel_rating contentRating.ratingLabel%TYPE; v_rel_max_season NUMBER; v_rel_wish_count NUMBER; v_rel_found BOOLEAN := FALSE; v_episode_count NUMBER;
-    BEGIN
-        OPEN related_content_cursor;
-        LOOP
-            -- FETCH 목록 변경 (similarity_score)
-            FETCH related_content_cursor INTO
-                v_rel_content_id, v_rel_title, v_rel_thumb, v_rel_year, v_rel_quality, v_rel_desc, v_rel_runtime,
-                v_rel_rating, v_rel_max_season, v_rel_wish_count, v_rel_similarity_score;
-            EXIT WHEN related_content_cursor%NOTFOUND;
-
-            v_rel_found := TRUE;
-            DBMS_OUTPUT.PUT_LINE('  --- [유사도:' || NVL(v_rel_similarity_score, 0) || '] ' || v_rel_title || ' ---');
-            DBMS_OUTPUT.PUT_LINE('    썸네일URL: ' || NVL(v_rel_thumb, '없음'));
-            IF v_rel_max_season IS NOT NULL THEN BEGIN SELECT COUNT(*) INTO v_episode_count FROM video v WHERE v.contentID = v_rel_content_id AND v.seasonNum IS NOT NULL; EXCEPTION WHEN OTHERS THEN v_episode_count := 0; END; DBMS_OUTPUT.PUT_LINE('    정보: 시즌 ' || v_rel_max_season || '개 / 총 ' || v_episode_count || ' 화');
-            ELSE DBMS_OUTPUT.PUT_LINE('    정보: 러닝타임 ' || v_rel_runtime || '분'); END IF;
-            DBMS_OUTPUT.PUT_LINE('    등급: ' || NVL(v_rel_rating, '정보 없음') || ' / 화질: ' || NVL(v_rel_quality, '정보 없음') || ' / 출시: ' || v_rel_year);
-            DBMS_OUTPUT.PUT_LINE('    설명: ' || SUBSTR(NVL(v_rel_desc, '없음'), 1, 100) || CASE WHEN LENGTH(v_rel_desc) > 100 THEN '...' ELSE '' END);
-            DBMS_OUTPUT.PUT_LINE('    찜 여부 ('||v_profile_nickname||'님): ' || CASE WHEN v_rel_wish_count > 0 THEN 'Y' ELSE 'N' END);
-        END LOOP;
-        CLOSE related_content_cursor;
-        IF NOT v_rel_found THEN DBMS_OUTPUT.PUT_LINE('  (유사한 콘텐츠 정보가 없습니다.)'); END IF;
-    END; -- 내부 DECLARE 블록 종료
-    DBMS_OUTPUT.PUT_LINE('-------------------------------------');
-
-
-    -- ==========================================================
-    -- 섹션 3: 예고편 및 다른 영상 - 변경 없음
-    -- ==========================================================
-    DBMS_OUTPUT.PUT_LINE('--- 예고편 및 다른 영상 ---');
-    v_found := FALSE; FOR trailer_rec IN (SELECT t.title, t.trailerURL FROM trailer t JOIN video v ON t.videoID = v.videoID WHERE v.contentID = v_content_id ORDER BY t.title) LOOP v_found := TRUE; DBMS_OUTPUT.PUT_LINE('  제목: ' || trailer_rec.title || ', URL: ' || trailer_rec.trailerURL); END LOOP;
-    IF NOT v_found THEN DBMS_OUTPUT.PUT_LINE('  (예고편 정보가 없습니다.)'); END IF;
-    DBMS_OUTPUT.PUT_LINE('-------------------------------------');
-
-    -- ==========================================================
-    -- 섹션 4: 주요 정보 요약 - 변경 없음
-    -- ==========================================================
-    DBMS_OUTPUT.PUT_LINE('--- 주요 정보 요약 ---');
-    DBMS_OUTPUT.PUT_LINE('제목: ' || v_content_rec.title);
-    DBMS_OUTPUT.PUT_LINE('크리에이터: ' || NVL(v_creators, '정보 없음'));
-    DBMS_OUTPUT.PUT_LINE('출연: ' || NVL(SUBSTR(v_cast, 1, 500), '정보 없음') || CASE WHEN LENGTH(v_cast) > 500 THEN '...' ELSE '' END);
-    DBMS_OUTPUT.PUT_LINE('장르: ' || NVL(v_genres, '정보 없음'));
-    DBMS_OUTPUT.PUT_LINE('특징: ' || NVL(v_features, '정보 없음'));
-    DBMS_OUTPUT.PUT_LINE('시청등급: ' || NVL(v_ratingLabel, '정보 없음'));
-    DBMS_OUTPUT.PUT_LINE('-------------------------------------------------');
-
-
-EXCEPTION WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('최종 오류 발생: ' || SQLERRM);
-END;
-/
-
--- 사용한 & 변수 정의 해제
-UNDEFINE profile_id
-UNDEFINE content_title
-
-
----------- 아래 쿼리 수정 중------------------------------------------------------
---------------------------------------------------------------------------------
--- 15. 특정 콘텐츠 상세 정보 + 관련 목록 + 회차별 시청상태 표시 (최종 수정: 시청 완료 상태 표시)
+-- 12. 특정 콘텐츠 상세 정보 출력
 DECLARE
     -- 입력 변수 (프로필 ID 먼저)
     v_profile_id      profile.profileID%TYPE := &profile_id;
@@ -1695,4 +1310,5 @@ BEGIN
 EXCEPTION WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('최종 오류 발생: ' || SQLERRM);
 END;
 /
+
 
