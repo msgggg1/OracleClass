@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workbench progressCount="17" version="2.0">
 <workbenchAdvisor/>
-<window height="1039" width="974" x="953" y="0">
+<window height="1039" maximized="true" width="974" x="556" y="86">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -27,6 +27,7 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
+<part id="2"/>
 </presentation>
 </folder>
 </info>
@@ -34,8 +35,11 @@
 <editor id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" partName="schema2.exerd" title="schema2.exerd" tooltip="C:\Class\OracleClass\netflix\schema2.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Class/OracleClass/netflix/schema2.exerd"/>
 </editor>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" partName="schema2.exerd" title="schema2.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\schema2.exerd" workbook="DefaultEditorWorkbook">
+<editor id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" partName="schema2.exerd" title="schema2.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\schema2.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema2.exerd"/>
+</editor>
+<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="jobkorea.exerd" partName="jobkorea.exerd" title="jobkorea.exerd" tooltip="C:\Users\user\Desktop\3조_JOBKOREA\jobkorea.exerd" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/Users/user/Desktop/3조_JOBKOREA/jobkorea.exerd"/>
 </editor>
 </editors>
 <views>
@@ -209,8 +213,8 @@
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/schema2%20(1).exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Class/OracleClass/netflix/schema2.exerd"/>
 <editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema2.exerd"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" uri="file:/C:/Users/user/Desktop/3조_JOBKOREA/jobkorea.exerd"/>
 </editors>
-<item historyLabel="netflix_film.exerd" index="2"/>
 <item historyLabel="video.exerd" index="0"/>
 <item historyLabel="netflix_film.exerd" index="2"/>
 <item historyLabel="user_game.exerd" index="3"/>
@@ -259,7 +263,8 @@
 <item historyLabel="schema2 (1).exerd" index="23"/>
 <item historyLabel="schema2.exerd" index="24"/>
 <item historyLabel="schema2.exerd" index="24"/>
-<item active="true" historyLabel="schema2.exerd" index="25"/>
+<item historyLabel="schema2.exerd" index="25"/>
+<item active="true" historyLabel="jobkorea.exerd" index="26"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -277,6 +282,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="jobkorea.exerd" tooltip="C:\Users\user\Desktop\3조_JOBKOREA\jobkorea.exerd">
+<persistable uri="file:/C:/Users/user/Desktop/3조_JOBKOREA/jobkorea.exerd"/>
+</file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" name="schema2.exerd" tooltip="C:\Users\user\Documents\카카오톡 받은 파일\schema2.exerd">
 <persistable uri="file:/C:/Users/user/Documents/카카오톡%20받은%20파일/schema2.exerd"/>
 </file>
